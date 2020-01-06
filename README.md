@@ -33,14 +33,14 @@ Players will control a flying-saucer with the mission of beaming up objects from
 ### Day 1
   * Ensure adequate basic setup
   * Spend time learning various aspects of Canvas
+  * Build basic functionality for flying-saucer to move and beam-up objects (collision detection)
 
 ### Day 2
-  * Build basic functionality for flying-saucer to move and beam-up objects
   * Have the functionality to randomly place new objects at certain intervals
   * Add score functionality
 
 ### Day 3
-  * Implement missile functionality and collision detection
+  * Implement missile functionality with collision detection
   * Write logic for health meter
 
 ### Day 4
