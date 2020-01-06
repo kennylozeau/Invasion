@@ -1,4 +1,6 @@
 import "./styles/index.css";
+// import { keyDownHandler, keyUpHandler } from './scripts/key_events';
+import Saucer from './scripts/flying_saucer';
 
 window.addEventListener("DOMContentLoaded", () => {
   const canvas = document.getElementById("myCanvas");
@@ -11,12 +13,12 @@ window.addEventListener("DOMContentLoaded", () => {
   let spacePressed = false;
   let shiftPressed = false;
 
-  const saucerHeight = 15;
-  const saucerWidth = 70;
-  let saucerX = 0;
-  let saucerY = 0;
+  // const saucerHeight = 15;
+  // const saucerWidth = 70;
+  // let saucerX = 0;
+  // let saucerY = 0;
 
-  let hyperDrive = false;
+  // let hyperDrive = false;
   
   document.addEventListener("keydown", keyDownHandler, false);
   document.addEventListener("keyup", keyUpHandler, false);
@@ -63,79 +65,85 @@ window.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  function drawSaucer() {
+  function drawSaucer(FlyingSaucer) {
     ctx.beginPath();
-    ctx.rect(saucerX, saucerY, saucerWidth, saucerHeight);
+    ctx.rect(FlyingSaucer.x, FlyingSaucer.y, FlyingSaucer.width, FlyingSaucer.height);
     ctx.fillStyle = "#0095DD";
     ctx.fill();
     ctx.closePath();
   }
 
-  function drawBeam() {
+  function drawBeam(FlyingSaucer) {
     ctx.beginPath();
-    ctx.rect(saucerX + (saucerWidth / 2) - 10, saucerY + saucerHeight, 20, canvas.height - saucerY);
-    ctx.fillStyle = "yellow";
+    ctx.rect(FlyingSaucer.x + (FlyingSaucer.width / 2) - 10, FlyingSaucer.y + FlyingSaucer.height, 20, canvas.height - FlyingSaucer.y);
+    ctx.fillStyle = "rgba(240, 255, 0, 0.75)";
     ctx.fill();
-    ctx.closePath();
+    ctx.closePath();  
   }
 
   function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    drawSaucer();
+
+    let FlyingSaucer = Saucer;
+    // console.log(FlyingSaucer)
+    drawSaucer(FlyingSaucer);
     
     if (spacePressed) {
-      drawBeam();
+      drawBeam(FlyingSaucer);
     }
 
     if (shiftPressed) {
-      hyperDrive = true;
+      FlyingSaucer.hyperDrive = true;
     } else {
-      hyperDrive = false;
+      FlyingSaucer.hyperDrive = false;
     }
 
     if (rightPressed) {
-      if (hyperDrive) {
-        saucerX += 12;
+      console.log("test")
+      if (FlyingSaucer.hyperDrive) {
+        FlyingSaucer.x += 12;
       } else {
-        saucerX += 6;
+        console.log(FlyingSaucer.x)
+        FlyingSaucer.x = FlyingSaucer.x + 6;
+        console.log(FlyingSaucer.x)
       }
 
-      if (saucerX + saucerWidth > canvas.width) {
-        saucerX = canvas.width - saucerWidth;
+      if (FlyingSaucer.x + FlyingSaucer.width > canvas.width) {
+        FlyingSaucer.x = canvas.width - FlyingSaucer.width;
       }
     }
     else if (leftPressed) {
-      if (hyperDrive) {
-        saucerX -= 12;
+      if (FlyingSaucer.hyperDrive) {
+        FlyingSaucer.x -= 12;
       } else {
-        saucerX -= 6;
+        FlyingSaucer.x -= 6;
       }
       
-      if (saucerX < 0) {
-        saucerX = 0;
+      if (FlyingSaucer.x < 0) {
+        FlyingSaucer.x = 0;
       }
     }
     
     if (upPressed) {
-      if (hyperDrive) {
-        saucerY -= 12;
+      if (FlyingSaucer.hyperDrive) {
+        FlyingSaucer.y -= 12;
       } else {
-        saucerY -= 6;
+        FlyingSaucer.y -= 6;
       }
 
-      if (saucerY < 0) {
-        saucerY = 0;
+      if (FlyingSaucer.y < 0) {
+        FlyingSaucer.y = 0;
       }
     }
     else if (downPressed) {
-      if (hyperDrive) {
-        saucerY += 12;
+      if (FlyingSaucer.hyperDrive) {
+        FlyingSaucer.y += 12;
       } else {
-        saucerY += 6;
+        FlyingSaucer.y += 6;
       }
 
-      if (saucerY + saucerHeight > canvas.height) {
-        saucerY = canvas.height - saucerHeight;
+      if (FlyingSaucer.y + FlyingSaucer.height > canvas.height) {
+        FlyingSaucer.y = canvas.height - FlyingSaucer.height;
       }
     }
     requestAnimationFrame(draw);
