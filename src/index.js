@@ -27,6 +27,7 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
   let missiles = { missile: new Missile };
+  let flip = 0;
 
   // let target = {
   //   x: 50,
@@ -156,7 +157,13 @@ window.addEventListener("DOMContentLoaded", () => {
 
   function drawMissile(missiles) {
     let missileImage = new Image;
-    missileImage.src = '/Users/kennylozeau/Desktop/Invasion/src/assets/images/missile.png';
+    if (flip === 0) {
+      flip = 1;
+      missileImage.src = '/Users/kennylozeau/Desktop/Invasion/src/assets/images/missile.png';
+    } else {
+      flip = 0;
+      missileImage.src = '/Users/kennylozeau/Desktop/Invasion/src/assets/images/missile-flip.png';
+    }
     ctx.beginPath();
     // ctx.rect(missiles.missile.x, missiles.missile.y, missiles.missile.width, missiles.missile.height)
     // ctx.fillStyle = "gray";
