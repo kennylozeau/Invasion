@@ -1,7 +1,8 @@
-canvas {
-  background: rgb(255, 255, 255);
+#myCanvas {
+  /* background: rgb(255, 255, 255); */
   display: block;
   margin: 0 auto;
+  background-image: url('/Users/kennylozeau/Desktop/Invasion/src/assets/images/landscape.png');
 }
 
 body {

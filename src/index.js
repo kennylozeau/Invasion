@@ -9,6 +9,8 @@ window.addEventListener("DOMContentLoaded", () => {
   const ctx = canvas.getContext("2d");
 
   let score = 0;
+  let health = 100;
+  let gameOver = false;
 
   let rightPressed = false;
   let leftPressed = false;
@@ -112,16 +114,63 @@ window.addEventListener("DOMContentLoaded", () => {
     ctx.beginPath();
     ctx.font = "30px Arial";
     ctx.fillStyle = "rgba(0, 0, 0, 1)"
-    ctx.fillText(`Score: ${score}`, 800, 40);
+    ctx.fillText(`Score: ${score}`, 780, 40);
+    ctx.closePath();
+  }
+
+  function drawHealth() {
+    ctx.beginPath();
+    ctx.font = "30px Arial";
+    ctx.fillStyle = "rgba(0, 0, 0, 1)"
+    ctx.fillText(`Health: ${health}`, 780, 80);
+    ctx.closePath();
+  }
+
+  function drawGameOver() {
+    ctx.beginPath();
+    ctx.font = "80px Arial";
+    ctx.fillStyle = "#FF0000"
+    ctx.fillText("GAME OVER", 230, 300);
+    ctx.closePath();
+  }
+
+  function drawPullUp() {
+    ctx.beginPath();
+    ctx.font = "80px Arial";
+    ctx.fillStyle = "#FF0000"
+    ctx.fillText("PULL UP", 305, 200);
+    ctx.closePath();
+  }
+
+  function drawExplosion(x, y) {
+    ctx.beginPath();
+    ctx.arc(x, y, 25, 0, 2 * Math.PI)
+    ctx.fillStyle = "#FF0000"
+    ctx.fill();
     ctx.closePath();
   }
 
   function drawMissile(missiles) {
     ctx.beginPath();
-    ctx.rect(missiles.missile.x, missiles.missile.y, 8, 36)
+    ctx.rect(missiles.missile.x, missiles.missile.y, missiles.missile.width, missiles.missile.height)
     ctx.fillStyle = "gray";
     ctx.fill();
     ctx.closePath();
+  }
+
+  function checkMissileStrike(FlyingSaucer) {
+    if (missiles.missile.x < FlyingSaucer.x + FlyingSaucer.width &&
+        missiles.missile.x + missiles.missile.width > FlyingSaucer.x &&
+        missiles.missile.y < FlyingSaucer.y + FlyingSaucer.height &&
+        missiles.missile.y + missiles.missile.height > FlyingSaucer.y
+      ) {
+        drawExplosion(missiles.missile.x + (missiles.missile.width / 2), missiles.missile.y)
+        delete missiles.missile;
+        missiles.missile = new Missile;
+        return true;
+      } else {
+        return false;
+      }
   }
 
   function draw() {
@@ -130,15 +179,31 @@ window.addEventListener("DOMContentLoaded", () => {
     let FlyingSaucer = Saucer;
     // console.log(FlyingSaucer)
     drawSaucer(FlyingSaucer);
+
+    if (FlyingSaucer.y + FlyingSaucer.height === canvas.height) {
+      drawPullUp();
+      health -= 1;
+    }
+
     drawTarget(targets);
     drawScore();
+    drawHealth();
     drawMissile(missiles);
     missiles.missile.y += missiles.missile.dy;
-    if (missiles.missile.y < -36) {
+    if (missiles.missile.y < -missiles.missile.height) {
       delete missiles.missile;
       missiles.missile = new Missile;
     }
     
+    if (checkMissileStrike(FlyingSaucer)) {
+      health -= 20;
+    }
+    
+    if (health <= 0) {
+      drawGameOver();
+      return true;
+    }
+
     if (spacePressed) {
       drawBeam(FlyingSaucer);
 
@@ -220,5 +285,7 @@ window.addEventListener("DOMContentLoaded", () => {
     requestAnimationFrame(draw);
   }
 
-  draw();
+  if (!gameOver) {
+    gameOver = draw();
+  }
 });
