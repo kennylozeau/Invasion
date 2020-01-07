@@ -11,6 +11,7 @@ window.addEventListener("DOMContentLoaded", () => {
   let score = 0;
   let health = 100;
   let gameOver = false;
+  let endDelay = false;
 
   let rightPressed = false;
   let leftPressed = false;
@@ -182,6 +183,13 @@ window.addEventListener("DOMContentLoaded", () => {
   function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+    if (endDelay) {
+      drawGameOver();
+      drawScore();
+      drawHealth();
+      return true;
+    }
+
     let FlyingSaucer = Saucer;
     // console.log(FlyingSaucer)
     drawSaucer(FlyingSaucer);
@@ -206,8 +214,10 @@ window.addEventListener("DOMContentLoaded", () => {
     }
     
     if (health <= 0) {
-      drawGameOver();
-      return true;
+      // drawGameOver();
+      health = 0;
+      endDelay = true;
+      // return true;
     }
 
     if (spacePressed) {
