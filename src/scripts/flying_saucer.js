@@ -1,6 +1,6 @@
 const FlyingSaucer = {
-  height: 15,
-  width: 70,
+  height: 20,
+  width: 80,
   x: 0,
   y: 0,
   hyperDrive: false

@@ -85,10 +85,13 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
   function drawSaucer(FlyingSaucer) {
+    let saucerImage = new Image;
+    saucerImage.src = '/Users/kennylozeau/Desktop/Invasion/src/assets/images/saucer.png';
     ctx.beginPath();
-    ctx.rect(FlyingSaucer.x, FlyingSaucer.y, FlyingSaucer.width, FlyingSaucer.height);
-    ctx.fillStyle = "#0095DD";
-    ctx.fill();
+    // ctx.rect(FlyingSaucer.x, FlyingSaucer.y, FlyingSaucer.width, FlyingSaucer.height);
+    // ctx.fillStyle = "#0095DD";
+    // ctx.fill();
+    ctx.drawImage(saucerImage, FlyingSaucer.x, FlyingSaucer.y);
     ctx.closePath();
   }
 
@@ -151,10 +154,13 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
   function drawMissile(missiles) {
+    let missileImage = new Image;
+    missileImage.src = '/Users/kennylozeau/Desktop/Invasion/src/assets/images/missile.png';
     ctx.beginPath();
-    ctx.rect(missiles.missile.x, missiles.missile.y, missiles.missile.width, missiles.missile.height)
-    ctx.fillStyle = "gray";
-    ctx.fill();
+    // ctx.rect(missiles.missile.x, missiles.missile.y, missiles.missile.width, missiles.missile.height)
+    // ctx.fillStyle = "gray";
+    // ctx.fill();
+    ctx.drawImage(missileImage, missiles.missile.x, missiles.missile.y);
     ctx.closePath();
   }
 
