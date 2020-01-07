@@ -2,7 +2,7 @@
   /* background: rgb(255, 255, 255); */
   display: block;
   margin: 0 auto;
-  background-image: url('/Users/kennylozeau/Desktop/Invasion/src/assets/images/landscape.png');
+  background-image: url('./src/assets/images/landscape.png');
 }
 
 body {
