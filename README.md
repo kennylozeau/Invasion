@@ -5,7 +5,7 @@
 Players will control a flying-saucer with the mission of beaming up objects from Earth. While using the tractor beam, the fly-saucer will need to remain stationary. Meanwhile, Earth will be launching missile at the flying-saucer, which must be avoided by the player.
 
 ## Main MVPs
-  * Player-controller flying-saucer that can beam-up objects from the ground
+  * Player-controlled flying-saucer that can beam-up objects from the ground
   * Players will have scores based on the number of objects collected and a health meter based on number of missile impacts
   * Missiles will be launched from Earth towards the flying-saucer
   * Target objects and missile launchers will be randomly placed
