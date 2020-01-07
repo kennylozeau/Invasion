@@ -9,7 +9,6 @@ window.addEventListener("DOMContentLoaded", () => {
   const ctx = canvas.getContext("2d");
 
   let score = 0;
-  let health = 100;
   let gameOver = false;
   let endDelay = false;
 
@@ -27,19 +26,8 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
   let missiles = { missile: new Missile };
+  let FlyingSaucer = new Saucer;
   let flip = 0;
-
-  // let target = {
-  //   x: 50,
-  //   y: canvas.height - 10
-  // };
-
-  // const saucerHeight = 15;
-  // const saucerWidth = 70;
-  // let saucerX = 0;
-  // let saucerY = 0;
-
-  // let hyperDrive = false;
   
   document.addEventListener("keydown", keyDownHandler, false);
   document.addEventListener("keyup", keyUpHandler, false);
@@ -123,11 +111,11 @@ window.addEventListener("DOMContentLoaded", () => {
     ctx.closePath();
   }
 
-  function drawHealth() {
+  function drawHealth(FlyingSaucer) {
     ctx.beginPath();
     ctx.font = "30px Arial";
     ctx.fillStyle = "rgba(0, 0, 0, 1)"
-    ctx.fillText(`Health: ${health}`, 780, 80);
+    ctx.fillText(`Health: ${FlyingSaucer.health}`, 780, 80);
     ctx.closePath();
   }
 
@@ -187,28 +175,46 @@ window.addEventListener("DOMContentLoaded", () => {
       }
   }
 
+  function checkBeamUp(targets, FlyingSaucer) {
+    Object.values(targets).forEach(target => {
+      if (target.x + 10 > FlyingSaucer.x + (FlyingSaucer.width / 2) - 10 && target.x < FlyingSaucer.x + (FlyingSaucer.width / 2) + 10) {
+        target.y -= 3;
+        if (target.y <= FlyingSaucer.y + FlyingSaucer.height) {
+          score++;
+          for (let key in targets) {
+            if (targets[key] === target) {
+              delete targets[key];
+              targets[key] = new Target;
+            }
+          }
+        }
+      } else {
+        target.y += 5;
+        if (target.y > canvas.height - 10) target.y = canvas.height - 10;
+      }
+    })
+  }
+
   function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     if (endDelay) {
       drawGameOver();
       drawScore();
-      drawHealth();
+      drawHealth(FlyingSaucer);
       return true;
     }
 
-    let FlyingSaucer = Saucer;
-    // console.log(FlyingSaucer)
     drawSaucer(FlyingSaucer);
 
     if (FlyingSaucer.y + FlyingSaucer.height === canvas.height) {
       drawPullUp();
-      health -= 1;
+      FlyingSaucer.health -= 1;
     }
 
     drawTarget(targets);
     drawScore();
-    drawHealth();
+    drawHealth(FlyingSaucer);
     drawMissile(missiles);
     missiles.missile.y += missiles.missile.dy;
     if (missiles.missile.y < -missiles.missile.height) {
@@ -217,36 +223,19 @@ window.addEventListener("DOMContentLoaded", () => {
     }
     
     if (checkMissileStrike(FlyingSaucer)) {
-      health -= 20;
+      FlyingSaucer.health -= 20;
     }
     
-    if (health <= 0) {
+    if (FlyingSaucer.health <= 0) {
       // drawGameOver();
-      health = 0;
+      FlyingSaucer.health = 0;
       endDelay = true;
       // return true;
     }
 
     if (spacePressed) {
       drawBeam(FlyingSaucer);
-
-      Object.values(targets).forEach(target => {
-        if (target.x + 10 > FlyingSaucer.x + (FlyingSaucer.width / 2) - 10 && target.x < FlyingSaucer.x + (FlyingSaucer.width / 2) + 10) {
-          target.y -= 3;
-          if (target.y <= FlyingSaucer.y + FlyingSaucer.height) {
-            score++;
-            for(let key in targets) {
-              if (targets[key] === target) {
-                delete targets[key];
-                targets[key] = new Target;
-              }
-            }
-          }
-        } else {
-          target.y += 5;
-          if (target.y > canvas.height - 10) target.y = canvas.height - 10;  
-        }
-      })
+      checkBeamUp(targets, FlyingSaucer);
     } else {
       Object.values(targets).forEach(target => {
         target.y += 5;
