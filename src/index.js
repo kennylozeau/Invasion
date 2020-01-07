@@ -155,7 +155,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
   function drawMissile(missiles) {
     let missileImage = new Image;
-    missileImage.src = '/Users/kennylozeau/Desktop/Invasion/src/assets/images/missile.png';
+    missileImage.src = 'src/assets/images/missile.png';
     ctx.beginPath();
     // ctx.rect(missiles.missile.x, missiles.missile.y, missiles.missile.width, missiles.missile.height)
     // ctx.fillStyle = "gray";
