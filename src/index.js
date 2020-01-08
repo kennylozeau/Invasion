@@ -1,5 +1,7 @@
 import "./styles/index.css";
 // import { keyDownHandler, keyUpHandler } from './scripts/key_events';
+import firebase from 'firebase';
+import 'firebase/firestore';
 import Saucer from './scripts/flying_saucer';
 import Target from './scripts/target';
 import Missile from './scripts/missile';
@@ -8,8 +10,32 @@ window.addEventListener("DOMContentLoaded", () => {
   const canvas = document.getElementById("myCanvas");
   const ctx = canvas.getContext("2d");
 
+  firebase.initializeApp({
+    apiKey: 'AIzaSyBoLEjbvc3K2e2m3EA378jmuaJ9fGhc15g',
+    authDomain: "invasion-3f8d9.firebaseapp.com",
+    projectId: 'invasion-3f8d9'
+  });
+
+  const db = firebase.firestore();
+
+  let highScores = [];
+
+  // db.collection("high_scores")
+  //   .orderBy("score", "desc")
+  //   .limit(10)
+  //   .get()
+  //   .then((querySnapshot) => {
+  //     querySnapshot.forEach((doc) => {
+  //       highScores.push([doc.data().name, doc.data().score]);
+  //       let scoreLi = document.createElement("li");
+  //       scoreLi.innerHTML = `${doc.data().name}  -  ${doc.data().score}`;
+  //       document.getElementById("high_scores").appendChild(scoreLi);
+  //   });
+  // });
+
+
   let score = 0;
-  let gameOver = false;
+  // let gameOver = false;
   let endDelay = false;
 
   let rightPressed = false;
@@ -25,24 +51,52 @@ window.addEventListener("DOMContentLoaded", () => {
     target3: new Target
   }
 
-  let missiles = { missile: new Missile };
   let FlyingSaucer = new Saucer;
+  let missiles = { missile: new Missile(FlyingSaucer) };
   let flip = 0;
   
   document.addEventListener("keydown", keyDownHandler, false);
   document.addEventListener("keyup", keyUpHandler, false);
 
+  function getHighScores() {
+    highScores = [];
+    
+    db.collection("high_scores")
+      .orderBy("score", "desc")
+      .limit(10)
+      .get()
+      .then((querySnapshot) => {
+        let highScoresList = document.getElementById("high-scores")
+        
+        if (highScoresList.childElementCount > 0) {
+          for (let i = highScoresList.childNodes.length; i >= 0; i--) {
+            let child = highScoresList.childNodes[i];
+            highScoresList.removeChild(child);
+          }
+        }
+
+        querySnapshot.forEach((doc) => {
+          highScores.push([doc.data().name, doc.data().score]);
+          let scoreLi = document.createElement("li");
+          scoreLi.innerHTML = `${doc.data().name}  -  ${doc.data().score}`;
+          highScoresList.appendChild(scoreLi);
+        });
+      });
+  }
+
+  getHighScores();
+
   function keyDownHandler(e) {
-    if (e.key == "Right" || e.key == "ArrowRight") {
+    if (e.key == "Right" || e.key == "ArrowRight" || e.key == "d") {
       rightPressed = true;
     }
-    else if (e.key == "Left" || e.key == "ArrowLeft") {
+    else if (e.key == "Left" || e.key == "ArrowLeft" || e.key == "a") {
       leftPressed = true;
     }
-    else if (e.key == "Down" || e.key == "ArrowDown") {
+    else if (e.key == "Down" || e.key == "ArrowDown" || e.key == "s") {
       downPressed = true;
     }
-    else if (e.key == "Up" || e.key == "ArrowUp") {
+    else if (e.key == "Up" || e.key == "ArrowUp" || e.key == "w") {
       upPressed = true;
     }
     else if (e.key == "Spacebar" || e.key == " ") {
@@ -54,16 +108,16 @@ window.addEventListener("DOMContentLoaded", () => {
   }
   
   function keyUpHandler(e) {
-    if (e.key == "Right" || e.key == "ArrowRight") {
+    if (e.key == "Right" || e.key == "ArrowRight" || e.key == "d") {
       rightPressed = false;
     }
-    else if (e.key == "Left" || e.key == "ArrowLeft") {
+    else if (e.key == "Left" || e.key == "ArrowLeft" || e.key == "a") {
       leftPressed = false;
     }
-    else if (e.key == "Down" || e.key == "ArrowDown") {
+    else if (e.key == "Down" || e.key == "ArrowDown" || e.key == "s") {
       downPressed = false;
     }
-    else if (e.key == "Up" || e.key == "ArrowUp") {
+    else if (e.key == "Up" || e.key == "ArrowUp" || e.key == "w") {
       upPressed = false;
     }
     else if (e.key == "Spacebar" || e.key == " ") {
@@ -145,13 +199,13 @@ window.addEventListener("DOMContentLoaded", () => {
 
   function drawMissile(missiles) {
     let missileImage = new Image;
-    if (flip === 0) {
-      flip = 1;
+    // if (flip === 0) {
+    //   flip = 1;
       missileImage.src = '/Users/kennylozeau/Desktop/Invasion/src/assets/images/missile.png';
-    } else {
-      flip = 0;
-      missileImage.src = '/Users/kennylozeau/Desktop/Invasion/src/assets/images/missile-flip.png';
-    }
+    // } else {
+    //   flip = 0;
+    //   missileImage.src = '/Users/kennylozeau/Desktop/Invasion/src/assets/images/missile-flip.png';
+    // }
     ctx.beginPath();
     // ctx.rect(missiles.missile.x, missiles.missile.y, missiles.missile.width, missiles.missile.height)
     // ctx.fillStyle = "gray";
@@ -168,7 +222,7 @@ window.addEventListener("DOMContentLoaded", () => {
       ) {
         drawExplosion(missiles.missile.x + (missiles.missile.width / 2), missiles.missile.y)
         delete missiles.missile;
-        missiles.missile = new Missile;
+        missiles.missile = new Missile(FlyingSaucer);
         return true;
       } else {
         return false;
@@ -202,6 +256,31 @@ window.addEventListener("DOMContentLoaded", () => {
       drawGameOver();
       drawScore();
       drawHealth(FlyingSaucer);
+      
+      if (score > highScores[9][1]) {
+        let highScoreForm = document.createElement("form");
+        highScoreForm.id = "high-score-form";
+        highScoreForm.onsubmit = function (e) {
+          e.preventDefault();
+          let name = e.currentTarget.children[0].value;
+          db.collection("high_scores").add({
+            name,
+            score
+          })
+          .then(() => {
+            document.getElementById("high-score-form").remove();
+            getHighScores();
+          })
+        }
+        let highScoreNameInput = document.createElement("input");
+        highScoreNameInput.type = "text";
+        let highScoreSubmit = document.createElement("input");
+        highScoreSubmit.type = "submit";
+        highScoreForm
+          .appendChild(highScoreNameInput)
+          .appendChild(highScoreSubmit);
+        document.getElementById("high-scores").appendChild(highScoreForm);
+      }
       return true;
     }
 
@@ -216,21 +295,26 @@ window.addEventListener("DOMContentLoaded", () => {
     drawScore();
     drawHealth(FlyingSaucer);
     drawMissile(missiles);
+
     missiles.missile.y += missiles.missile.dy;
-    if (missiles.missile.y < -missiles.missile.height) {
+    missiles.missile.x += missiles.missile.dx;
+    if (missiles.missile.y < -missiles.missile.height || missiles.missile.x < 0 || missiles.missile.x > canvas.width) {
       delete missiles.missile;
-      missiles.missile = new Missile;
+      missiles.missile = new Missile(FlyingSaucer);
     }
+
+    // if (missiles.missile.x < 0 || missiles.missile.x > canvas.width) {
+    //   delete missiles.missile;
+    //   missiles.missile = new Missile(FlyingSaucer);
+    // }
     
     if (checkMissileStrike(FlyingSaucer)) {
       FlyingSaucer.health -= 20;
     }
     
     if (FlyingSaucer.health <= 0) {
-      // drawGameOver();
       FlyingSaucer.health = 0;
       endDelay = true;
-      // return true;
     }
 
     if (spacePressed) {
@@ -297,7 +381,16 @@ window.addEventListener("DOMContentLoaded", () => {
     requestAnimationFrame(draw);
   }
 
-  if (!gameOver) {
-    gameOver = draw();
-  }
+  draw();
+  // if (!gameOver) {
+  //   gameOver = draw();
+  //   debugger
+  //   if (score > 0 && gameOver) {
+  //     let highScoreForm = document.createElement("form");
+  //     let highScoreNameInput = document.createElement("input");
+  //     highScoreForm.appendChild(highScoreNameInput);
+  //     debugger
+  //     document.getElementById("high_scores").appendChild(highScoreForm);
+  //   }
+  // }
 });

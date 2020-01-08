@@ -9,6 +9,7 @@ body {
   background-color: black;
   display: flex;
   flex-direction: column;
+  color: white;
 }
 
 body h1 {
@@ -16,4 +17,19 @@ body h1 {
   margin: 0 auto;
   font-size: 40px;
   margin-bottom: 40px;
+}
+
+#high-score-form {
+  position: absolute;
+  top: 300px;
+  left: 500px;
+}
+
+.game-content {
+  display: flex;
+  border: 1px solid green;
+}
+
+#high-scores {
+  border: 1px solid red;
 }
