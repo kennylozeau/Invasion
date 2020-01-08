@@ -20,20 +20,6 @@ window.addEventListener("DOMContentLoaded", () => {
 
   let highScores = [];
 
-  // db.collection("high_scores")
-  //   .orderBy("score", "desc")
-  //   .limit(10)
-  //   .get()
-  //   .then((querySnapshot) => {
-  //     querySnapshot.forEach((doc) => {
-  //       highScores.push([doc.data().name, doc.data().score]);
-  //       let scoreLi = document.createElement("li");
-  //       scoreLi.innerHTML = `${doc.data().name}  -  ${doc.data().score}`;
-  //       document.getElementById("high_scores").appendChild(scoreLi);
-  //   });
-  // });
-
-
   let score = 0;
   // let gameOver = false;
   let endDelay = false;
@@ -44,6 +30,7 @@ window.addEventListener("DOMContentLoaded", () => {
   let upPressed = false;
   let spacePressed = false;
   let shiftPressed = false;
+  let gameStarted = false;
 
   let targets = {
     target1: new Target,
@@ -105,6 +92,16 @@ window.addEventListener("DOMContentLoaded", () => {
     }
     else if (e.key == "Shift") {
       shiftPressed = true;
+    } else if (e.key == "r") {
+      if (!gameStarted) {
+        debugger
+        FlyingSaucer = new Saucer;
+        score = 0;
+        endDelay = false;
+        debugger
+        draw();
+      }
+      gameStarted = true;
     }
   }
   
@@ -282,6 +279,7 @@ window.addEventListener("DOMContentLoaded", () => {
           .appendChild(highScoreSubmit);
         document.getElementById("high-scores").appendChild(highScoreForm);
       }
+      
       return true;
     }
 
@@ -316,6 +314,8 @@ window.addEventListener("DOMContentLoaded", () => {
     if (FlyingSaucer.health <= 0) {
       FlyingSaucer.health = 0;
       endDelay = true;
+      debugger
+      gameStarted = false;
     }
 
     if (spacePressed) {
@@ -382,7 +382,7 @@ window.addEventListener("DOMContentLoaded", () => {
     requestAnimationFrame(draw);
   }
 
-  draw();
+  // draw();
   // if (!gameOver) {
   //   gameOver = draw();
   //   debugger
