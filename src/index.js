@@ -69,8 +69,9 @@ window.addEventListener("DOMContentLoaded", () => {
         let highScoresList = document.getElementById("high-scores")
         
         if (highScoresList.childElementCount > 0) {
-          for (let i = highScoresList.childNodes.length; i >= 0; i--) {
+          for (let i = highScoresList.childNodes.length - 1; i >= 0; i--) {
             let child = highScoresList.childNodes[i];
+            // debugger
             highScoresList.removeChild(child);
           }
         }
