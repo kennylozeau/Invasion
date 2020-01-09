@@ -232,6 +232,26 @@ window.addEventListener("DOMContentLoaded", () => {
     ctx.beginPath();
     ctx.drawImage(missileImg, missiles.missile.x, missiles.missile.y);
     ctx.closePath();
+
+    // ctx.save();
+    // ctx.beginPath();
+    // ctx.rotate(missiles.missile.theta)
+    // let newX = missiles.missile.x * Math.cos(-missiles.missile.theta) - missiles.missile.y * Math.sin(-missiles.missile.theta);
+    // let newY = missiles.missile.y * Math.cos(-missiles.missile.theta) + missiles.missile.y * Math.sin(-missiles.missile.theta);
+    // ctx.drawImage(missileImg, newX, newY);
+    // ctx.closePath();
+    // ctx.restore();
+
+    // ctx.save();
+    // ctx.beginPath();
+    // ctx.translate(missiles.missile.x, missiles.missile.y);
+    // ctx.rotate(missiles.missile.theta)
+    // ctx.translate(-missiles.missile.x, -missiles.missile.y);
+    // let newX = missiles.missile.x * Math.cos(missiles.missile.theta) - missiles.missile.y * Math.sin(missiles.missile.theta);
+    // let newY = missiles.missile.y * Math.cos(missiles.missile.theta) + missiles.missile.y * Math.sin(missiles.missile.theta);
+    // ctx.drawImage(missileImg, newX, newY);
+    // ctx.closePath();
+    // ctx.restore();
   }
 
   function drawSplash() {
@@ -290,8 +310,8 @@ window.addEventListener("DOMContentLoaded", () => {
       drawScore();
       drawHealth(FlyingSaucer);
       
-      if (score > 0) {
-      // if (score > highScores[9][1]) {
+      if (score > 0 && !eeEnabled) {
+      // if (score > highScores[9][1] && !eeEnabled) {
         drawNewHighScore();
 
         let highScoreForm = document.createElement("form");
@@ -332,6 +352,7 @@ window.addEventListener("DOMContentLoaded", () => {
       delete missiles.missile;
       FlyingSaucer = new Saucer;
       missiles.missile = new Missile(FlyingSaucer);
+      eeEnabled = false;
 
       return true;
     }
