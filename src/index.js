@@ -31,6 +31,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
   let score = 0;
   let gameOver = false;
+  let gameStarted = false;
   let endDelay = false;
 
   let rightPressed = false;
@@ -41,7 +42,6 @@ window.addEventListener("DOMContentLoaded", () => {
   let shiftPressed = false;
   let tildePressed = false;
   let onePressed = false;
-  let gameStarted = false;
 
   let targets = {
     target1: new Target,
@@ -105,15 +105,16 @@ window.addEventListener("DOMContentLoaded", () => {
       tildePressed = true;
     } else if (e.key == "1") {
       onePressed = true;
-    } else if (e.key == "r") {
+    } else if (e.key == "r" && !gameStarted) {
       debugger
-      if (!gameStarted && !gameOver) {
+      // if (!gameStarted && !gameOver) {
         FlyingSaucer = new Saucer;
         score = 0;
         endDelay = false;
+        gameStarted = true;
         draw();
-      }
-      gameStarted = true;
+      // }
+      // gameStarted = true;
     }
   }
   
@@ -261,8 +262,10 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
   function checkBeamUp(targets, FlyingSaucer) {
+    let width = 10;
+    if (eeEnabled) width = 25;
     Object.values(targets).forEach(target => {
-      if (target.x + 10 > FlyingSaucer.x + (FlyingSaucer.width / 2) - 10 && target.x < FlyingSaucer.x + (FlyingSaucer.width / 2) + 10) {
+      if (target.x + width > FlyingSaucer.x + (FlyingSaucer.width / 2) - 10 && target.x < FlyingSaucer.x + (FlyingSaucer.width / 2) + 10) {
         target.y -= 3;
         if (target.y <= FlyingSaucer.y + FlyingSaucer.height) {
           score++;
@@ -291,9 +294,9 @@ window.addEventListener("DOMContentLoaded", () => {
       // gameOver = true;
       // gameStarted = true;
       
-      // if (score > 0) {
-      if (score > highScores[9][1]) {
-        debugger
+      if (score > 0) {
+      // if (score > highScores[9][1]) {
+        // debugger
         drawNewHighScore();
 
         let highScoreForm = document.createElement("form");
@@ -326,9 +329,10 @@ window.addEventListener("DOMContentLoaded", () => {
           .appendChild(highScoreSubmit);
         highScoreModal.appendChild(highScoreForm);
         document.getElementById("high-scores").appendChild(highScoreModal);
+      } else {
+        gameStarted = false;
       }
       // gameOver = false;
-      // gameStarted = false;
       return true;
     }
 
@@ -359,7 +363,7 @@ window.addEventListener("DOMContentLoaded", () => {
       FlyingSaucer.health = 0;
       endDelay = true;
       gameOver = true;
-      gameStarted = false;
+      // gameStarted = false;
     }
 
     if (spacePressed) {
