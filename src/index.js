@@ -10,6 +10,7 @@ import missileImage from '../src/assets/images/missile.png';
 import splashImage from '../src/assets/images/splash.png';
 import saucerImage from '../src/assets/images/saucer.png';
 import eeImage from '../src/assets/images/ee.png';
+import explosionImage from '../src/assets/images/explosion-lq.png';
 
 
 window.addEventListener("DOMContentLoaded", () => {
@@ -51,6 +52,10 @@ window.addEventListener("DOMContentLoaded", () => {
 
   let FlyingSaucer = new Saucer;
   let missiles = { missile: new Missile(FlyingSaucer) };
+  let explosionOn = false;
+  let explosionFrame = 0;
+  let explosionX;
+  let explosionY;
   
   document.addEventListener("keydown", keyDownHandler, false);
   document.addEventListener("keyup", keyUpHandler, false);
@@ -218,12 +223,48 @@ window.addEventListener("DOMContentLoaded", () => {
     ctx.closePath();
   }
 
-  function drawExplosion(x, y) {
-    ctx.beginPath();
-    ctx.arc(x, y, 25, 0, 2 * Math.PI)
-    ctx.fillStyle = "#FF0000"
-    ctx.fill();
-    ctx.closePath();
+  function drawExplosion() {
+  // function drawExplosion(x, y) {
+    // ctx.beginPath();
+    // ctx.arc(x, y, 25, 0, 2 * Math.PI)
+    // ctx.fillStyle = "#FF0000"
+    // ctx.fill();
+    // ctx.closePath();
+
+    debugger
+
+    let spriteX;
+    let spriteY;
+
+    let explosionImg = new Image;
+    explosionImg.src = explosionImage;
+
+    // if (!explosionOn) {
+    //   explosionOn = true;
+    //   explosionFrame = 0;
+    // }
+
+    if (explosionFrame < 4) {
+      spriteX = 64 * explosionFrame;
+      spriteY = 0;
+    } else if (explosionFrame >= 4 && explosionFrame < 8) {
+      spriteX = 64 * (explosionFrame % 4);
+      spriteY = 64;
+    } else if (explosionFrame >= 8 && explosionFrame < 12) {
+      spriteX = 64 * (explosionFrame % 4);
+      spriteY = 128;
+    } else if (explosionFrame >= 12 && explosionFrame < 16) {
+      spriteX = 64 * (explosionFrame % 4);
+      spriteY = 192;
+    }
+
+    ctx.drawImage(explosionImg, spriteX, spriteY, 64, 64, explosionX - 32, explosionY - 32, 64, 64);
+
+    explosionFrame++
+    if (explosionFrame > 15) {
+      explosionOn = false;
+      explosionFrame = 0;
+    }
   }
 
   function drawMissile(missiles) {
@@ -270,7 +311,11 @@ window.addEventListener("DOMContentLoaded", () => {
         missiles.missile.y < FlyingSaucer.y + FlyingSaucer.height &&
         missiles.missile.y + missiles.missile.height > FlyingSaucer.y
       ) {
-        drawExplosion(missiles.missile.x + (missiles.missile.width / 2), missiles.missile.y)
+        // drawExplosion(missiles.missile.x + (missiles.missile.width / 2), missiles.missile.y);
+        explosionOn = true;
+        explosionX = missiles.missile.x + (missiles.missile.width / 2);
+        explosionY = missiles.missile.y;
+
         delete missiles.missile;
         missiles.missile = new Missile(FlyingSaucer);
         return true;
@@ -353,11 +398,14 @@ window.addEventListener("DOMContentLoaded", () => {
       FlyingSaucer = new Saucer;
       missiles.missile = new Missile(FlyingSaucer);
       eeEnabled = false;
+      explosionOn= false;
 
       return true;
     }
 
     drawSaucer(FlyingSaucer);
+
+    if (explosionOn) drawExplosion();
 
     if (FlyingSaucer.y + FlyingSaucer.height === canvas.height) {
       drawPullUp();
