@@ -106,9 +106,7 @@ window.addEventListener("DOMContentLoaded", () => {
     } else if (e.key == "1") {
       onePressed = true;
     } else if (e.key == "r" && !gameStarted) {
-      debugger
       // if (!gameStarted && !gameOver) {
-        FlyingSaucer = new Saucer;
         score = 0;
         endDelay = false;
         gameStarted = true;
@@ -291,12 +289,9 @@ window.addEventListener("DOMContentLoaded", () => {
       drawGameOver();
       drawScore();
       drawHealth(FlyingSaucer);
-      // gameOver = true;
-      // gameStarted = true;
       
       if (score > 0) {
       // if (score > highScores[9][1]) {
-        // debugger
         drawNewHighScore();
 
         let highScoreForm = document.createElement("form");
@@ -317,7 +312,7 @@ window.addEventListener("DOMContentLoaded", () => {
             score
           })
           .then(() => {
-            document.getElementById("high-score-form").remove();
+            document.getElementById("high-score-modal").remove();
             getHighScores();
             gameOver = false;
             gameStarted = false;
@@ -328,11 +323,16 @@ window.addEventListener("DOMContentLoaded", () => {
           .appendChild(highScoreNameInput)
           .appendChild(highScoreSubmit);
         highScoreModal.appendChild(highScoreForm);
-        document.getElementById("high-scores").appendChild(highScoreModal);
+        document.getElementById("canvas-container").appendChild(highScoreModal);
+        highScoreNameInput.focus();
       } else {
         gameStarted = false;
       }
-      // gameOver = false;
+
+      delete missiles.missile;
+      FlyingSaucer = new Saucer;
+      missiles.missile = new Missile(FlyingSaucer);
+
       return true;
     }
 
@@ -430,16 +430,4 @@ window.addEventListener("DOMContentLoaded", () => {
     requestAnimationFrame(draw);
   }
 
-  // draw();
-  // if (!gameOver) {
-  //   gameOver = draw();
-  //   debugger
-  //   if (score > 0 && gameOver) {
-  //     let highScoreForm = document.createElement("form");
-  //     let highScoreNameInput = document.createElement("input");
-  //     highScoreForm.appendChild(highScoreNameInput);
-  //     debugger
-  //     document.getElementById("high_scores").appendChild(highScoreForm);
-  //   }
-  // }
 });

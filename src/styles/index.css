@@ -6,7 +6,6 @@ input, input:focus, input:active {
 }
 
 #myCanvas {
-  /* background: rgb(255, 255, 255); */
   display: block;
   margin: 0 auto;
   background-image: url('../assets/images/landscape.png');
@@ -28,15 +27,8 @@ body > h1 {
   margin-bottom: 40px;
 }
 
-/* #high-score-form {
-  position: absolute;
-  top: 300px;
-  left: 500px;
-} */
-
-.game-content {
+#game-content {
   display: flex;
-  border: 1px solid green;
 }
 
 #high-scores {
@@ -45,26 +37,26 @@ body > h1 {
 }
 
 #high-score-modal {
-  width: 430px;
+  width: 950px;
   height: 120px;
   background-color: transparent;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-evenly;
-  font-size: 30px;
+  font-size: 40px;
   color: black;
   position: absolute;
   top: 440px;
-  left: 550px;
+  z-index: 50;
 }
 
 #high-score-modal input {
-  font-size: 30px;
+  font-size: 40px;
   padding: 2px;
   text-align: center;
-  font-size: 30px;
   font-family: 'VT323', monospace;
+  border-radius: 2px;
 }
 
 .high-scores-container {
@@ -80,12 +72,12 @@ body > h1 {
   border-bottom: 3px solid white;
 }
 
-.modal-container {
-  width: 950px;
-  border: 1px solid red;
-}
-
 .instructions {
   list-style: none;
   width: 330px;
+}
+
+#canvas-container {
+  display: flex;
+  flex-direction: column;
 }

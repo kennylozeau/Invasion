@@ -6,7 +6,7 @@ class Missile {
     // this.dx = 0;
     this.height = 40;
     this.width = 10;
-    this.velocity = 10;
+    this.velocity = 9;
 
     this.theta = Math.atan((-(FlyingSaucer.y - this.y)) / (FlyingSaucer.x + (FlyingSaucer.width / 2) - this.x));
 

@@ -28,8 +28,10 @@
   <script src="./dist/main.js"></script>
   <h1>INVASION!</h1>
   
-  <div class="game-content">
-    <canvas id="myCanvas" width="950" height="650"></canvas>
+  <div id="game-content">
+    <div id="canvas-container">
+      <canvas id="myCanvas" width="950" height="650"></canvas>
+    </div>
     <div class="high-scores-container">
       <h2>High Scores</h2>
       <ol id="high-scores">
@@ -38,6 +40,7 @@
         <li>arrow keys or a/s/w/d: fly saucer</li>
         <li>hold space: activate tractor beam</li>
         <li>hold shift: activate hyperdrive</li>
+        <li>r: restart after game over</li>
         <br />
         <li>Use your tractor beam to collect as many objects as possible while avoiding missiles and the ground.
           Use your hyperdrive if you need a boost!</li>
