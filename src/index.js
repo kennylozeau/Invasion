@@ -9,6 +9,7 @@ import Missile from './scripts/missile';
 import missileImage from '../src/assets/images/missile.png';
 import splashImage from '../src/assets/images/splash.png';
 import saucerImage from '../src/assets/images/saucer.png';
+import eeImage from '../src/assets/images/ee.png';
 
 
 window.addEventListener("DOMContentLoaded", () => {
@@ -26,6 +27,7 @@ window.addEventListener("DOMContentLoaded", () => {
   const db = firebase.firestore();
 
   let highScores = [];
+  let eeEnabled = false;
 
   let score = 0;
   let gameOver = false;
@@ -37,6 +39,8 @@ window.addEventListener("DOMContentLoaded", () => {
   let upPressed = false;
   let spacePressed = false;
   let shiftPressed = false;
+  let tildePressed = false;
+  let onePressed = false;
   let gameStarted = false;
 
   let targets = {
@@ -47,7 +51,6 @@ window.addEventListener("DOMContentLoaded", () => {
 
   let FlyingSaucer = new Saucer;
   let missiles = { missile: new Missile(FlyingSaucer) };
-  let flip = 0;
   
   document.addEventListener("keydown", keyDownHandler, false);
   document.addEventListener("keyup", keyUpHandler, false);
@@ -98,7 +101,12 @@ window.addEventListener("DOMContentLoaded", () => {
     }
     else if (e.key == "Shift") {
       shiftPressed = true;
+    } else if (e.key == "`") {
+      tildePressed = true;
+    } else if (e.key == "1") {
+      onePressed = true;
     } else if (e.key == "r") {
+      debugger
       if (!gameStarted && !gameOver) {
         FlyingSaucer = new Saucer;
         score = 0;
@@ -127,6 +135,10 @@ window.addEventListener("DOMContentLoaded", () => {
     }
     else if (e.key == "Shift") {
       shiftPressed = false;
+    } else if (e.key == "`") {
+      tildePressed = false;
+    } else if (e.key == "1") {
+      onePressed = false;
     }
   }
 
@@ -143,11 +155,19 @@ window.addEventListener("DOMContentLoaded", () => {
 
   function drawTarget(targets) {
     Object.values(targets).forEach( target => {
-      ctx.beginPath();
-      ctx.rect(target.x, target.y, 10, 10);
-      ctx.fillStyle = "#FF0000";
-      ctx.fill();
-      ctx.closePath();
+      if (eeEnabled) {
+        let targetImg = new Image;
+        targetImg.src = eeImage;
+        ctx.beginPath();
+        ctx.drawImage(targetImg, target.x, target.y - 30);
+        ctx.closePath();
+      } else {
+        ctx.beginPath();
+        ctx.rect(target.x, target.y, 10, 10);
+        ctx.fillStyle = "#FF0000";
+        ctx.fill();
+        ctx.closePath();
+      }
     })
   }
 
@@ -209,13 +229,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
   function drawMissile(missiles) {
     let missileImg = new Image;
-    // if (flip === 0) {
-    //   flip = 1;
-      missileImg.src = missileImage;
-    // } else {
-    //   flip = 0;
-    //   missileImage.src = '/Users/kennylozeau/Desktop/Invasion/src/assets/images/missile-flip.png';
-    // }
+    missileImg.src = missileImage;
     ctx.beginPath();
     ctx.drawImage(missileImg, missiles.missile.x, missiles.missile.y);
     ctx.closePath();
@@ -268,21 +282,30 @@ window.addEventListener("DOMContentLoaded", () => {
 
   function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    if (tildePressed && onePressed) eeEnabled = true;
 
     if (endDelay) {
       drawGameOver();
       drawScore();
       drawHealth(FlyingSaucer);
+      // gameOver = true;
+      // gameStarted = true;
       
-      // if (score > highScores[9][1]) {
-      if (score > 0) {
+      // if (score > 0) {
+      if (score > highScores[9][1]) {
+        debugger
         drawNewHighScore();
+
         let highScoreForm = document.createElement("form");
         let highScoreModal = document.createElement("div");
+        let highScoreNameInput = document.createElement("input");
+        let highScoreSubmit = document.createElement("input");
+        
+        highScoreNameInput.type = "text";
+        highScoreSubmit.type = "submit";
         highScoreModal.id = "high-score-modal";
         highScoreForm.id = "high-score-form";
         highScoreModal.innerText = "Type your name and press enter";
-        highScoreModal.appendChild(highScoreForm);
         highScoreForm.onsubmit = function (e) {
           e.preventDefault();
           let name = e.currentTarget.children[0].value;
@@ -293,18 +316,19 @@ window.addEventListener("DOMContentLoaded", () => {
           .then(() => {
             document.getElementById("high-score-form").remove();
             getHighScores();
+            gameOver = false;
+            gameStarted = false;
           })
         }
-        let highScoreNameInput = document.createElement("input");
-        highScoreNameInput.type = "text";
-        let highScoreSubmit = document.createElement("input");
-        highScoreSubmit.type = "submit";
+        
         highScoreForm
           .appendChild(highScoreNameInput)
           .appendChild(highScoreSubmit);
+        highScoreModal.appendChild(highScoreForm);
         document.getElementById("high-scores").appendChild(highScoreModal);
       }
-      
+      // gameOver = false;
+      // gameStarted = false;
       return true;
     }
 
