@@ -4,6 +4,7 @@ class Target {
     this.y = 640;
     this.dropped = false;
     this.lifted = false;
+    this.powerUp = false;
   }
 }
 
