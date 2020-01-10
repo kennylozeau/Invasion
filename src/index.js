@@ -355,8 +355,8 @@ window.addEventListener("DOMContentLoaded", () => {
       drawScore();
       drawHealth(FlyingSaucer);
       
-      if (score > 0 && !eeEnabled) {
-      // if (score > highScores[9][1] && !eeEnabled) {
+      // if (score > 0 && !eeEnabled) {
+      if (score > highScores[9][1] && !eeEnabled) {
         drawNewHighScore();
 
         let highScoreForm = document.createElement("form");
