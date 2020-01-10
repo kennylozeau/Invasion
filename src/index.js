@@ -113,7 +113,7 @@ window.addEventListener("DOMContentLoaded", () => {
       tildePressed = true;
     } else if (e.key == "1") {
       onePressed = true;
-    } else if (e.key == "f") {
+    } else if (e.key == "f" || e.key == "F") {
       fPressed = true;
     } else if (e.key == "r" && !gameStarted) {
       // if (!gameStarted && !gameOver) {
@@ -148,7 +148,7 @@ window.addEventListener("DOMContentLoaded", () => {
       tildePressed = false;
     } else if (e.key == "1") {
       onePressed = false;
-    } else if (e.key == "f") {
+    } else if (e.key == "f" || e.key == "F") {
       fPressed = false;
     }
   }
@@ -213,7 +213,7 @@ window.addEventListener("DOMContentLoaded", () => {
     ctx.beginPath();
     ctx.font = "30px VT323";
     ctx.fillStyle = "rgba(0, 0, 0, 1)"
-    ctx.fillText(`Power Ups: ${FlyingSaucer.powerUps}`, 800, 120);
+    ctx.fillText(`Shields: ${FlyingSaucer.powerUps}`, 800, 120);
     ctx.closePath();
   }
 
