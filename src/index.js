@@ -51,7 +51,7 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
   let FlyingSaucer = new Saucer;
-  let missiles = { missile: new Missile(FlyingSaucer) };
+  let missiles = { missile: new Missile(FlyingSaucer, score) };
   let explosionOn = false;
   let explosionFrame = 0;
   let explosionX;
@@ -178,7 +178,7 @@ window.addEventListener("DOMContentLoaded", () => {
   function drawBeam(FlyingSaucer) {
     ctx.beginPath();
     ctx.rect(FlyingSaucer.x + (FlyingSaucer.width / 2) - 10, FlyingSaucer.y + FlyingSaucer.height, 20, canvas.height - FlyingSaucer.y);
-    ctx.fillStyle = "rgba(240, 255, 0, 0.75)";
+    ctx.fillStyle = "rgba(240, 255, 0, 0.4)";
     ctx.fill();
     ctx.closePath();  
   }
@@ -230,9 +230,7 @@ window.addEventListener("DOMContentLoaded", () => {
     // ctx.fillStyle = "#FF0000"
     // ctx.fill();
     // ctx.closePath();
-
-    debugger
-
+    
     let spriteX;
     let spriteY;
 
@@ -317,7 +315,7 @@ window.addEventListener("DOMContentLoaded", () => {
         explosionY = missiles.missile.y;
 
         delete missiles.missile;
-        missiles.missile = new Missile(FlyingSaucer);
+        missiles.missile = new Missile(FlyingSaucer, score);
         return true;
       } else {
         return false;
@@ -330,8 +328,13 @@ window.addEventListener("DOMContentLoaded", () => {
     Object.values(targets).forEach(target => {
       if (target.x + width > FlyingSaucer.x + (FlyingSaucer.width / 2) - 10 && target.x < FlyingSaucer.x + (FlyingSaucer.width / 2) + 10) {
         target.y -= 3;
+        target.lifted = true;
         if (target.y <= FlyingSaucer.y + FlyingSaucer.height) {
+          if (target.dropped) score++;
           score++;
+          target.lifted = false;
+          target.dropped = false;
+
           for (let key in targets) {
             if (targets[key] === target) {
               delete targets[key];
@@ -341,7 +344,12 @@ window.addEventListener("DOMContentLoaded", () => {
         }
       } else {
         target.y += 5;
-        if (target.y > canvas.height - 10) target.y = canvas.height - 10;
+        if (target.lifted) target.dropped = true;
+        if (target.y > canvas.height - 10) {
+          target.y = canvas.height - 10;
+          target.lifted = false;
+          target.dropped = false;
+        };
       }
     })
   }
@@ -373,7 +381,7 @@ window.addEventListener("DOMContentLoaded", () => {
           e.preventDefault();
           let name = e.currentTarget.children[0].value;
           db.collection("high_scores").add({
-            name,
+            name: name.trim().slice(0,10),
             score
           })
           .then(() => {
@@ -396,7 +404,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
       delete missiles.missile;
       FlyingSaucer = new Saucer;
-      missiles.missile = new Missile(FlyingSaucer);
+      missiles.missile = new Missile(FlyingSaucer, score);
       eeEnabled = false;
       explosionOn= false;
 
@@ -421,7 +429,7 @@ window.addEventListener("DOMContentLoaded", () => {
     missiles.missile.x += missiles.missile.dx;
     if (missiles.missile.y < -missiles.missile.height || missiles.missile.x < 0 || missiles.missile.x > canvas.width) {
       delete missiles.missile;
-      missiles.missile = new Missile(FlyingSaucer);
+      missiles.missile = new Missile(FlyingSaucer, score);
     }
     
     if (checkMissileStrike(FlyingSaucer)) {
@@ -446,6 +454,7 @@ window.addEventListener("DOMContentLoaded", () => {
     }
 
     if (shiftPressed) {
+      debugger
       FlyingSaucer.hyperDrive = true;
     } else {
       FlyingSaucer.hyperDrive = false;

@@ -1,12 +1,12 @@
 class Missile {
-  constructor(FlyingSaucer) {
+  constructor(FlyingSaucer, score) {
     this.x = 40 + Math.floor(Math.random() * 890);
     this.y = 650;
     // this.dy = 0;
     // this.dx = 0;
     this.height = 40;
     this.width = 10;
-    this.velocity = 9;
+    this.velocity = 4 + parseInt(score / 10);
 
     this.theta = Math.atan((-(FlyingSaucer.y - this.y)) / (FlyingSaucer.x + (FlyingSaucer.width / 2) - this.x));
 
