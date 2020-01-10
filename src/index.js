@@ -10,6 +10,7 @@ import missileImage from '../src/assets/images/missile.png';
 import splashImage from '../src/assets/images/splash.png';
 import saucerImage from '../src/assets/images/saucer.png';
 import eeImage from '../src/assets/images/ee.png';
+import targetImage from '../src/assets/images/chicken.png';
 import explosionImage from '../src/assets/images/explosion-lq.png';
 
 
@@ -166,10 +167,15 @@ window.addEventListener("DOMContentLoaded", () => {
         ctx.drawImage(targetImg, target.x, target.y - 30);
         ctx.closePath();
       } else {
+        // ctx.beginPath();
+        // ctx.rect(target.x, target.y, 10, 10);
+        // ctx.fillStyle = "#FF0000";
+        // ctx.fill();
+        // ctx.closePath();
+        let targetImg = new Image;
+        targetImg.src = targetImage;
         ctx.beginPath();
-        ctx.rect(target.x, target.y, 10, 10);
-        ctx.fillStyle = "#FF0000";
-        ctx.fill();
+        ctx.drawImage(targetImg, target.x, target.y - 10);
         ctx.closePath();
       }
     })
@@ -323,7 +329,7 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
   function checkBeamUp(targets, FlyingSaucer) {
-    let width = 10;
+    let width = 20;
     if (eeEnabled) width = 25;
     Object.values(targets).forEach(target => {
       if (target.x + width > FlyingSaucer.x + (FlyingSaucer.width / 2) - 10 && target.x < FlyingSaucer.x + (FlyingSaucer.width / 2) + 10) {
