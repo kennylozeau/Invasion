@@ -5,6 +5,10 @@ input, input:focus, input:active {
 	outline: none;
 }
 
+a, a:visited, a:hover, a:focus {
+	text-decoration: none;
+}
+
 #myCanvas {
   display: block;
   margin: 0 auto;
@@ -29,6 +33,7 @@ body > h1 {
 
 #game-content {
   display: flex;
+  margin-top: 30px;
 }
 
 #high-scores {
@@ -81,4 +86,17 @@ body > h1 {
 #canvas-container {
   display: flex;
   flex-direction: column;
+}
+
+.links {
+  display: flex;
+  width: 60%;
+  justify-content: space-around;
+}
+
+.links > a {
+  color: white;
+  margin: 0 auto;
+  font-size: 30px;
+  margin-top: 30px;
 }
