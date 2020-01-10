@@ -6,6 +6,8 @@ class FlyingSaucer {
     this.y = 0;
     this.hyperDrive = false;
     this.health = 100;
+    this.shieldOn = false;
+    this.powerUps = 0;
   }
 }
 

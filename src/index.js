@@ -11,6 +11,7 @@ import splashImage from '../src/assets/images/splash.png';
 import saucerImage from '../src/assets/images/saucer.png';
 import eeImage from '../src/assets/images/ee.png';
 import targetImage from '../src/assets/images/chicken.png';
+import powerUpImage from '../src/assets/images/crate.png';
 import explosionImage from '../src/assets/images/explosion-lq.png';
 
 
@@ -44,6 +45,7 @@ window.addEventListener("DOMContentLoaded", () => {
   let shiftPressed = false;
   let tildePressed = false;
   let onePressed = false;
+  let fPressed = false;
 
   let targets = {
     target1: new Target,
@@ -111,6 +113,8 @@ window.addEventListener("DOMContentLoaded", () => {
       tildePressed = true;
     } else if (e.key == "1") {
       onePressed = true;
+    } else if (e.key == "f") {
+      fPressed = true;
     } else if (e.key == "r" && !gameStarted) {
       // if (!gameStarted && !gameOver) {
         score = 0;
@@ -144,6 +148,8 @@ window.addEventListener("DOMContentLoaded", () => {
       tildePressed = false;
     } else if (e.key == "1") {
       onePressed = false;
+    } else if (e.key == "f") {
+      fPressed = false;
     }
   }
 
@@ -165,6 +171,12 @@ window.addEventListener("DOMContentLoaded", () => {
         targetImg.src = eeImage;
         ctx.beginPath();
         ctx.drawImage(targetImg, target.x, target.y - 30);
+        ctx.closePath();
+      } else if (target.powerUp) {
+        let targetImg = new Image;
+        targetImg.src = powerUpImage;
+        ctx.beginPath();
+        ctx.drawImage(targetImg, target.x, target.y - 10);
         ctx.closePath();
       } else {
         // ctx.beginPath();
@@ -194,6 +206,14 @@ window.addEventListener("DOMContentLoaded", () => {
     ctx.font = "30px VT323";
     ctx.fillStyle = "rgba(0, 0, 0, 1)"
     ctx.fillText(`Score: ${score}`, 800, 40);
+    ctx.closePath();
+  }
+
+  function drawPowerUps() {
+    ctx.beginPath();
+    ctx.font = "30px VT323";
+    ctx.fillStyle = "rgba(0, 0, 0, 1)"
+    ctx.fillText(`Power Ups: ${FlyingSaucer.powerUps}`, 800, 120);
     ctx.closePath();
   }
 
@@ -229,24 +249,25 @@ window.addEventListener("DOMContentLoaded", () => {
     ctx.closePath();
   }
 
-  function drawExplosion() {
-  // function drawExplosion(x, y) {
-    // ctx.beginPath();
-    // ctx.arc(x, y, 25, 0, 2 * Math.PI)
-    // ctx.fillStyle = "#FF0000"
-    // ctx.fill();
-    // ctx.closePath();
-    
+  function drawShield() {
+    ctx.beginPath();
+    ctx.arc(FlyingSaucer.x + (FlyingSaucer.width / 2),
+            FlyingSaucer.y + (FlyingSaucer.height / 2),
+            (FlyingSaucer.width / 2) + 5,
+            0,
+            2 * Math.PI);
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = "#FF0000";
+    ctx.stroke();
+    ctx.closePath();
+  }
+
+  function drawExplosion() {    
     let spriteX;
     let spriteY;
 
     let explosionImg = new Image;
     explosionImg.src = explosionImage;
-
-    // if (!explosionOn) {
-    //   explosionOn = true;
-    //   explosionFrame = 0;
-    // }
 
     if (explosionFrame < 4) {
       spriteX = 64 * explosionFrame;
@@ -310,12 +331,12 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
   function checkMissileStrike(FlyingSaucer) {
-    if (missiles.missile.x < FlyingSaucer.x + FlyingSaucer.width &&
+    if (!FlyingSaucer.shieldOn) {
+      if (missiles.missile.x < FlyingSaucer.x + FlyingSaucer.width &&
         missiles.missile.x + missiles.missile.width > FlyingSaucer.x &&
         missiles.missile.y < FlyingSaucer.y + FlyingSaucer.height &&
         missiles.missile.y + missiles.missile.height > FlyingSaucer.y
       ) {
-        // drawExplosion(missiles.missile.x + (missiles.missile.width / 2), missiles.missile.y);
         explosionOn = true;
         explosionX = missiles.missile.x + (missiles.missile.width / 2);
         explosionY = missiles.missile.y;
@@ -326,6 +347,25 @@ window.addEventListener("DOMContentLoaded", () => {
       } else {
         return false;
       }
+    } 
+    else {
+      let shieldX = FlyingSaucer.x + (FlyingSaucer.width / 2);
+      let shieldY = FlyingSaucer.y + (FlyingSaucer.height / 2);
+      const distance = Math.sqrt((missiles.missile.x - shieldX)** 2 + (missiles.missile.y - shieldY)** 2);
+
+      if (distance <= (FlyingSaucer.width / 2) + 5) {
+        explosionOn = true;
+        explosionX = missiles.missile.x + (missiles.missile.width / 2);
+        explosionY = missiles.missile.y;
+        FlyingSaucer.shieldOn = false;
+
+        delete missiles.missile;
+        missiles.missile = new Missile(FlyingSaucer, score);
+        return false;
+      } else {
+        return false;
+      }
+    }
   }
 
   function checkBeamUp(targets, FlyingSaucer) {
@@ -341,10 +381,15 @@ window.addEventListener("DOMContentLoaded", () => {
           target.lifted = false;
           target.dropped = false;
 
+          if (target.powerUp) {
+            FlyingSaucer.powerUps += 1;
+          }
+
           for (let key in targets) {
             if (targets[key] === target) {
+              const powerUp = target.powerUp;
               delete targets[key];
-              targets[key] = new Target;
+              if (!powerUp) targets[key] = new Target;
             }
           }
         }
@@ -419,6 +464,16 @@ window.addEventListener("DOMContentLoaded", () => {
 
     drawSaucer(FlyingSaucer);
 
+    if (fPressed && FlyingSaucer.powerUps > 0 && !FlyingSaucer.shieldOn) {
+      FlyingSaucer.shieldOn = true;
+      setTimeout(() => {
+        FlyingSaucer.shieldOn = false;
+      }, 5000);
+      FlyingSaucer.powerUps -= 1;
+      debugger
+    }
+    if (FlyingSaucer.shieldOn) drawShield();
+
     if (explosionOn) drawExplosion();
 
     if (FlyingSaucer.y + FlyingSaucer.height === canvas.height) {
@@ -426,8 +481,16 @@ window.addEventListener("DOMContentLoaded", () => {
       FlyingSaucer.health -= 1;
     }
 
+    if ((score % 10 === 0) && !targets.target4 && (score > 0)) {
+      targets.target4 = new Target;
+      targets.target4.powerUp = true;
+
+      setTimeout(() => { delete targets.target4 }, 10000);
+    }
+
     drawTarget(targets);
     drawScore();
+    drawPowerUps();
     drawHealth(FlyingSaucer);
     drawMissile(missiles);
 
@@ -460,7 +523,6 @@ window.addEventListener("DOMContentLoaded", () => {
     }
 
     if (shiftPressed) {
-      debugger
       FlyingSaucer.hyperDrive = true;
     } else {
       FlyingSaucer.hyperDrive = false;
