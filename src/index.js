@@ -381,7 +381,7 @@ window.addEventListener("DOMContentLoaded", () => {
           e.preventDefault();
           let name = e.currentTarget.children[0].value;
           db.collection("high_scores").add({
-            name,
+            name: name.trim().slice(0,10),
             score
           })
           .then(() => {

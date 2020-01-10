@@ -32,8 +32,9 @@ body > h1 {
 }
 
 #high-scores {
-  width: 135px;
+  width: 160px;
   margin-top: 20px;
+  margin-bottom: 5px;
 }
 
 #high-score-modal {
@@ -67,7 +68,7 @@ body > h1 {
 }
 
 .high-scores-container > h2 {
-  margin-top: 40px;
+  margin-top: 10px;
   margin-bottom: 0;
   border-bottom: 3px solid white;
 }
