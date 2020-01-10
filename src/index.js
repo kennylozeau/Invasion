@@ -45,7 +45,7 @@ window.addEventListener("DOMContentLoaded", () => {
   let shiftPressed = false;
   let tildePressed = false;
   let onePressed = false;
-  let fPressed = false;
+  let xPressed = false;
 
   let targets = {
     target1: new Target,
@@ -113,8 +113,8 @@ window.addEventListener("DOMContentLoaded", () => {
       tildePressed = true;
     } else if (e.key == "1") {
       onePressed = true;
-    } else if (e.key == "f" || e.key == "F") {
-      fPressed = true;
+    } else if (e.key == "x" || e.key == "X") {
+      xPressed = true;
     } else if (e.key == "r" && !gameStarted) {
       // if (!gameStarted && !gameOver) {
         score = 0;
@@ -148,8 +148,8 @@ window.addEventListener("DOMContentLoaded", () => {
       tildePressed = false;
     } else if (e.key == "1") {
       onePressed = false;
-    } else if (e.key == "f" || e.key == "F") {
-      fPressed = false;
+    } else if (e.key == "x" || e.key == "X") {
+      xPressed = false;
     }
   }
 
@@ -472,13 +472,12 @@ window.addEventListener("DOMContentLoaded", () => {
 
     drawSaucer(FlyingSaucer);
 
-    if (fPressed && FlyingSaucer.powerUps > 0 && !FlyingSaucer.shieldOn) {
+    if (xPressed && FlyingSaucer.powerUps > 0 && !FlyingSaucer.shieldOn) {
       FlyingSaucer.shieldOn = true;
       setTimeout(() => {
         FlyingSaucer.shieldOn = false;
       }, 8000);
       FlyingSaucer.powerUps -= 1;
-      debugger
     }
     if (FlyingSaucer.shieldOn) drawShield();
 
