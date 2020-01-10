@@ -468,7 +468,7 @@ window.addEventListener("DOMContentLoaded", () => {
       FlyingSaucer.shieldOn = true;
       setTimeout(() => {
         FlyingSaucer.shieldOn = false;
-      }, 5000);
+      }, 8000);
       FlyingSaucer.powerUps -= 1;
       debugger
     }
