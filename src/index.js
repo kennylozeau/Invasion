@@ -51,7 +51,7 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
   let FlyingSaucer = new Saucer;
-  let missiles = { missile: new Missile(FlyingSaucer) };
+  let missiles = { missile: new Missile(FlyingSaucer, score) };
   let explosionOn = false;
   let explosionFrame = 0;
   let explosionX;
@@ -315,7 +315,7 @@ window.addEventListener("DOMContentLoaded", () => {
         explosionY = missiles.missile.y;
 
         delete missiles.missile;
-        missiles.missile = new Missile(FlyingSaucer);
+        missiles.missile = new Missile(FlyingSaucer, score);
         return true;
       } else {
         return false;
@@ -404,7 +404,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
       delete missiles.missile;
       FlyingSaucer = new Saucer;
-      missiles.missile = new Missile(FlyingSaucer);
+      missiles.missile = new Missile(FlyingSaucer, score);
       eeEnabled = false;
       explosionOn= false;
 
@@ -429,7 +429,7 @@ window.addEventListener("DOMContentLoaded", () => {
     missiles.missile.x += missiles.missile.dx;
     if (missiles.missile.y < -missiles.missile.height || missiles.missile.x < 0 || missiles.missile.x > canvas.width) {
       delete missiles.missile;
-      missiles.missile = new Missile(FlyingSaucer);
+      missiles.missile = new Missile(FlyingSaucer, score);
     }
     
     if (checkMissileStrike(FlyingSaucer)) {
