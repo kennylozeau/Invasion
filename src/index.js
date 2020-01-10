@@ -372,10 +372,12 @@ window.addEventListener("DOMContentLoaded", () => {
     let width = 20;
     if (eeEnabled) width = 25;
     Object.values(targets).forEach(target => {
-      if (target.x + width > FlyingSaucer.x + (FlyingSaucer.width / 2) - 10 && target.x < FlyingSaucer.x + (FlyingSaucer.width / 2) + 10) {
+      if (target.x + width > FlyingSaucer.x + (FlyingSaucer.width / 2) - 10 &&
+          target.x < FlyingSaucer.x + (FlyingSaucer.width / 2) + 10 &&
+          target.y >= FlyingSaucer.y) {
         target.y -= 3;
         target.lifted = true;
-        if (target.y <= FlyingSaucer.y + FlyingSaucer.height) {
+        if (target.y <= FlyingSaucer.y + FlyingSaucer.height && target.y >= FlyingSaucer.y) {
           if (target.dropped) score++;
           score++;
           target.lifted = false;
@@ -456,6 +458,12 @@ window.addEventListener("DOMContentLoaded", () => {
       delete missiles.missile;
       FlyingSaucer = new Saucer;
       missiles.missile = new Missile(FlyingSaucer, score);
+      targets = {};
+      targets = {
+        target1: new Target,
+        target2: new Target,
+        target3: new Target
+      };
       eeEnabled = false;
       explosionOn= false;
 
