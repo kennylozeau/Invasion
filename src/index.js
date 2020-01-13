@@ -433,12 +433,12 @@ window.addEventListener("DOMContentLoaded", () => {
         highScoreForm.onsubmit = function (e) {
           e.preventDefault();
           let name = e.currentTarget.children[0].value;
+          document.getElementById("high-score-modal").remove();
           db.collection("high_scores").add({
             name: name.trim().slice(0,10),
             score
           })
           .then(() => {
-            document.getElementById("high-score-modal").remove();
             getHighScores();
             gameOver = false;
             gameStarted = false;
