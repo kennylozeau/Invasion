@@ -1,6 +1,6 @@
 import "./styles/index.css";
 // import { keyDownHandler, keyUpHandler } from './scripts/key_events';
-import firebase from 'firebase';
+import firebase from 'firebase/app';
 import 'firebase/firestore';
 import Saucer from './scripts/flying_saucer';
 import Target from './scripts/target';
