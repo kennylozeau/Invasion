@@ -33,6 +33,7 @@ window.addEventListener("DOMContentLoaded", () => {
   let eeEnabled = false;
 
   let score = 0;
+  let shieldTimeout;
   let gameOver = false;
   let gameStarted = false;
   let endDelay = false;
@@ -358,6 +359,7 @@ window.addEventListener("DOMContentLoaded", () => {
         explosionX = missiles.missile.x + (missiles.missile.width / 2);
         explosionY = missiles.missile.y;
         FlyingSaucer.shieldOn = false;
+        clearTimeout(shieldTimeout);
 
         delete missiles.missile;
         missiles.missile = new Missile(FlyingSaucer, score);
@@ -474,7 +476,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
     if (xPressed && FlyingSaucer.powerUps > 0 && !FlyingSaucer.shieldOn) {
       FlyingSaucer.shieldOn = true;
-      setTimeout(() => {
+      shieldTimeout = setTimeout(() => {
         FlyingSaucer.shieldOn = false;
       }, 8000);
       FlyingSaucer.powerUps -= 1;
