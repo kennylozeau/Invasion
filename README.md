@@ -30,9 +30,9 @@
   * Allows the player to interact with objects in complex ways, such as throwing and catching
 
 ### Real-time high scores
-  * Accomplished by utilizing Google Firebase (CLoud Firestore)
+  * Accomplished by utilizing Google Firebase (Cloud Firestore)
 
 # Future Features
   * Additional enemies to avoid, such as side-spawning fighter jets
-  * Multi-player functionality
   * Additional "tricks" implemented for retrieving objects, such as catching an object from below it or "looping and catching"
+  * Multi-player functionality
