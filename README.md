@@ -25,11 +25,12 @@
 
 # Significant Features
 
-## Custom-designed collision detection
+### Custom-designed collision detection
   * Capable of changing behavior depending on gameplay
   * Allows the player to interact with objects in complex ways, such as throwing and catching
 
-## Real-time high scores accomplished by utilizing Google Firebase
+### Real-time high scores
+  * Accomplished by utilizing Google Firebase (CLoud Firestore)
 
 # Future Features
   * Additional enemies to avoid, such as side-spawning fighter jets
