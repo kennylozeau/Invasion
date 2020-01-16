@@ -1,48 +1,37 @@
 # Overview
-**_Invasion!_** is a game in which the player controls a flying-saucer from outer space. The player's mission is to collect objects from Earth, while of course avoiding the constant attacks from frightened Earthlings.
+[Invasion! Live Site](https://kennylozeau.github.io/Invasion)
 
-# Functionality and MVPs
-Players will control a flying-saucer with the mission of beaming up objects from Earth. While using the tractor beam, the fly-saucer will need to remain stationary. Meanwhile, Earth will be launching missile at the flying-saucer, which must be avoided by the player.
+**_Invasion!_** is an original arcade-style game in which the player controls a flying-saucer from outer space. The player's mission is to collect objects from Earth, while of course avoiding the constant attacks from frightened Earthlings.
 
-## Main MVPs
-  * Player-controlled flying-saucer that can beam-up objects from the ground
-  * Players will have scores based on the number of objects collected and a health meter based on number of missile impacts
-  * Missiles will be launched from Earth towards the flying-saucer
-  * Target objects and missile launchers will be randomly placed
+![Splash](src/assets/images/splash.png)
 
-## Bonus MVPs
-  * New levels reached after collecting a certain number of objects
-  * Ability to activate a temporary shield
-  * Fighter jets!
-  * High scores
+# Technologies Used
+  * JavaScript
+  * HTML 5 Canvas
 
-# Wireframes
+# Gameplay
+  * Players control the flying-saucer using the four arrow keys
+  * Holding the shift key activates hyperdrive, doubling the speed of the flying-saucer
+  * The tractor beam is activated by holding the spacebar
+  * Shields, when available, are activated by pressing the 'x' key and protect against a single missile strike for up to 8 seconds
+  * Collecting an object earns the player one point
+  * Collecting a crate also earns the player one shield
+    * Crates appear every time the player earns 10 points
+  * Any object that is dropped and caught before reaching the ground will earn the player two points
+  * Missile velocity increases every time the player earns 15 points
+  * Players rapidly lose health while in contact with the ground
 
-**_Invasion!_** will consist of a single game canvas, primarily, below a header for the game. Adjacent to the gameplay area will be a list of game controls and helpful instructions. Links to social media will remain below the game, allowing it to remain the main focus.
-![Wireframes](src/assets/images/wireframes.png)
+![Gameplay](src/assets/images/invasion_clip.gif)
 
-# Architecture and Technology
+# Significant Features
 
-**_Invasion!_** will be implemented with the following technologies:
-  * JavaScript for the main game logic
-  * HTML Canvas for rendering the game
-  * Webpack to bundle the files
+## Custom-designed collision detection
+  * Capable of changing behavior depending on gameplay
+  * Allows the player to interact with objects in complex ways, such as throwing and catching
 
-# Implementation Timeline
+## Real-time high scores accomplished by utilizing Google Firebase
 
-### Day 1
-  * Ensure adequate basic setup
-  * Spend time learning various aspects of Canvas
-  * Build basic functionality for flying-saucer to move and beam-up objects (collision detection)
-
-### Day 2
-  * Have the functionality to randomly place new objects at certain intervals
-  * Add score functionality
-
-### Day 3
-  * Implement missile functionality with collision detection
-  * Write logic for health meter
-
-### Day 4
-  * Work on styling
-  * Add bonus features
+# Future Features
+  * Additional enemies to avoid, such as side-spawning fighter jets
+  * Multi-player functionality
+  * Additional "tricks" implemented for retrieving objects, such as catching an object from below it or "looping and catching"
