@@ -36,16 +36,17 @@
     firebase.initializeApp(firebaseConfig);
   </script>
   <script src="./dist/main.js"></script>
-  <!-- <h1>INVASION!</h1> -->
   
   <div id="game-content">
     <div id="canvas-container">
       <canvas id="myCanvas" width="950" height="650"></canvas>
     </div>
     <div class="high-scores-container">
-      <h2>High Scores</h2>
-      <ol id="high-scores">
-      </ol>
+      <div class="high-score-list-wrapper">
+        <h2>High Scores</h2>
+        <ol id="high-scores">
+        </ol>
+      </div>
       <ul class="instructions">
         <li><span class="keys">arrow keys:</span> <span class="commands">fly saucer</span></li>
         <li><span class="keys">hold space:</span class="keys"> <span class="commands">activate tractor beam</span class="commands"></li>
