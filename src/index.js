@@ -158,9 +158,6 @@ window.addEventListener("DOMContentLoaded", () => {
     let saucerImg = new Image;
     saucerImg.src = saucerImage;
     ctx.beginPath();
-    // ctx.rect(FlyingSaucer.x, FlyingSaucer.y, FlyingSaucer.width, FlyingSaucer.height);
-    // ctx.fillStyle = "#0095DD";
-    // ctx.fill();
     ctx.drawImage(saucerImg, FlyingSaucer.x, FlyingSaucer.y);
     ctx.closePath();
   }
@@ -180,11 +177,6 @@ window.addEventListener("DOMContentLoaded", () => {
         ctx.drawImage(targetImg, target.x, target.y - 10);
         ctx.closePath();
       } else {
-        // ctx.beginPath();
-        // ctx.rect(target.x, target.y, 10, 10);
-        // ctx.fillStyle = "#FF0000";
-        // ctx.fill();
-        // ctx.closePath();
         let targetImg = new Image;
         targetImg.src = targetImage;
         ctx.beginPath();
