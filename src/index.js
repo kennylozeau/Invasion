@@ -13,6 +13,7 @@ import eeImage from '../src/assets/images/ee.png';
 import targetImage from '../src/assets/images/chicken.png';
 import powerUpImage from '../src/assets/images/crate.png';
 import explosionImage from '../src/assets/images/explosion-lq.png';
+import explosionSound from '../src/assets/sounds/explosion.wav';
 
 
 window.addEventListener("DOMContentLoaded", () => {
@@ -323,6 +324,8 @@ window.addEventListener("DOMContentLoaded", () => {
         explosionOn = true;
         explosionX = missiles.missile.x + (missiles.missile.width / 2);
         explosionY = missiles.missile.y;
+        let explodeSound = new Audio(explosionSound);
+        explodeSound.play();
 
         delete missiles.missile;
         missiles.missile = new Missile(FlyingSaucer, score);
