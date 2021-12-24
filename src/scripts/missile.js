@@ -8,7 +8,20 @@ class Missile {
     this.width = 10;
     this.velocity = 7 + parseInt(score / 15);
 
+    let saucerMidX = (FlyingSaucer.x + (FlyingSaucer.width / 2));
+    let saucerMidY = (FlyingSaucer.y + (FlyingSaucer.height / 2));
+
     this.theta = Math.atan((-(FlyingSaucer.y - this.y)) / (FlyingSaucer.x + (FlyingSaucer.width / 2) - this.x));
+
+    if (this.x >= FlyingSaucer.x) {
+      // this.theta = -Math.atan((this.y - saucerMidY) / (this.x - saucerMidX));
+      let rotateAngle = Math.atan((this.x - saucerMidX) / (this.y - saucerMidY));
+      this.canvasRotate = -rotateAngle;
+    } else {
+      let rotateAngle = Math.atan((saucerMidX - this.x) / (this.y - saucerMidY));
+      this.canvasRotate = rotateAngle;
+      // this.theta = -Math.atan((this.y - saucerMidY) / (saucerMidX - this.x));
+    }
 
     // let slope = (FlyingSaucer.y - this.y) / (FlyingSaucer.x - this.x);
 
@@ -19,7 +32,7 @@ class Missile {
     } else {
       this.dx = -this.velocity * Math.cos(this.theta);
     }
-    
+
     // if (slope > 0) {
     //   this.dx = Math.sqrt((this.velocity * this.velocity) / (1 + slope));
     //   this.dy = Math.sqrt((this.velocity * this.velocity) / (1 + slope)) * slope;
@@ -35,9 +48,9 @@ class Missile {
   }
 
   // calculateTrajectory(FlyingSaucer) {
-    // let slope = (FlyingSaucer.y - this.y) / (FlyingSaucer.x - this.x);
-    // this.dx = Math.sqrt((this.velocity * this.velocity) / (1 + slope));
-    // this.dy = Math.sqrt((this.velocity * this.velocity) / (1 + slope));
+  // let slope = (FlyingSaucer.y - this.y) / (FlyingSaucer.x - this.x);
+  // this.dx = Math.sqrt((this.velocity * this.velocity) / (1 + slope));
+  // this.dy = Math.sqrt((this.velocity * this.velocity) / (1 + slope));
   // }
 }
 

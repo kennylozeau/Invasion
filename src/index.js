@@ -293,32 +293,22 @@ window.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  function drawMissile(missiles) {
+  function drawMissile({missile}) {
     let missileImg = new Image;
     missileImg.src = missileImage;
+
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    let translateX = missile.x + (missile.width / 2);
+    let translateY = missile.y + (missile.height / 2);
+
+    ctx.translate(translateX, translateY);
+    ctx.rotate(missile.canvasRotate);
+    ctx.translate(-translateX, -translateY);
+
     ctx.beginPath();
-    ctx.drawImage(missileImg, missiles.missile.x, missiles.missile.y);
+    ctx.drawImage(missileImg, missile.x, missile.y);
     ctx.closePath();
-
-    // ctx.save();
-    // ctx.beginPath();
-    // ctx.rotate(missiles.missile.theta)
-    // let newX = missiles.missile.x * Math.cos(-missiles.missile.theta) - missiles.missile.y * Math.sin(-missiles.missile.theta);
-    // let newY = missiles.missile.y * Math.cos(-missiles.missile.theta) + missiles.missile.y * Math.sin(-missiles.missile.theta);
-    // ctx.drawImage(missileImg, newX, newY);
-    // ctx.closePath();
-    // ctx.restore();
-
-    // ctx.save();
-    // ctx.beginPath();
-    // ctx.translate(missiles.missile.x, missiles.missile.y);
-    // ctx.rotate(missiles.missile.theta)
-    // ctx.translate(-missiles.missile.x, -missiles.missile.y);
-    // let newX = missiles.missile.x * Math.cos(missiles.missile.theta) - missiles.missile.y * Math.sin(missiles.missile.theta);
-    // let newY = missiles.missile.y * Math.cos(missiles.missile.theta) + missiles.missile.y * Math.sin(missiles.missile.theta);
-    // ctx.drawImage(missileImg, newX, newY);
-    // ctx.closePath();
-    // ctx.restore();
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
   }
 
   function drawSplash() {
