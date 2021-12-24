@@ -14,6 +14,8 @@ import targetImage from '../src/assets/images/chicken.png';
 import powerUpImage from '../src/assets/images/crate.png';
 import explosionImage from '../src/assets/images/explosion-lq.png';
 import explosionSound from '../src/assets/sounds/explosion.wav';
+import beamSound from '../src/assets/sounds/beam.wav';
+import cluckSound from '../src/assets/sounds/cluck.wav';
 
 
 window.addEventListener("DOMContentLoaded", () => {
@@ -61,6 +63,10 @@ window.addEventListener("DOMContentLoaded", () => {
   let explosionFrame = 0;
   let explosionX;
   let explosionY;
+
+  const tractorBeamSound = new Audio(beamSound);
+  const explodeSound = new Audio(explosionSound);
+  const chickenCluckSound = new Audio(cluckSound);
   
   document.addEventListener("keydown", keyDownHandler, false);
   document.addEventListener("keyup", keyUpHandler, false);
@@ -324,7 +330,7 @@ window.addEventListener("DOMContentLoaded", () => {
         explosionOn = true;
         explosionX = missiles.missile.x + (missiles.missile.width / 2);
         explosionY = missiles.missile.y;
-        let explodeSound = new Audio(explosionSound);
+        
         explodeSound.play();
 
         delete missiles.missile;
@@ -366,6 +372,7 @@ window.addEventListener("DOMContentLoaded", () => {
         target.lifted = true;
         if (target.y <= FlyingSaucer.y + FlyingSaucer.height && target.y >= FlyingSaucer.y) {
           if (target.dropped) score++;
+          chickenCluckSound.play();
           score++;
           target.lifted = false;
           target.dropped = false;
@@ -506,10 +513,15 @@ window.addEventListener("DOMContentLoaded", () => {
       // gameStarted = false;
     }
 
+    // let tractorBeamSound = new Audio(beamSound);
+
     if (spacePressed) {
       drawBeam(FlyingSaucer);
       checkBeamUp(targets, FlyingSaucer);
+    
+      if (tractorBeamSound.paused) tractorBeamSound.play();
     } else {
+      tractorBeamSound.pause();
       Object.values(targets).forEach(target => {
         target.y += 5;
         if (target.y > canvas.height - 10) target.y = canvas.height - 10;
