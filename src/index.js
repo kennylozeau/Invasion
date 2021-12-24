@@ -406,6 +406,8 @@ window.addEventListener("DOMContentLoaded", () => {
     if (tildePressed && onePressed) eeEnabled = true;
 
     if (endDelay) {
+      tractorBeamSound.loop = false;
+      tractorBeamSound.pause();
       drawGameOver();
       drawScore();
       drawHealth(FlyingSaucer);
@@ -519,9 +521,13 @@ window.addEventListener("DOMContentLoaded", () => {
       drawBeam(FlyingSaucer);
       checkBeamUp(targets, FlyingSaucer);
     
-      if (tractorBeamSound.paused) tractorBeamSound.play();
+      if (tractorBeamSound.paused) {
+        tractorBeamSound.play();
+        tractorBeamSound.loop = true;
+      };
     } else {
       tractorBeamSound.pause();
+      tractorBeamSound.currentTime = 0;
       Object.values(targets).forEach(target => {
         target.y += 5;
         if (target.y > canvas.height - 10) target.y = canvas.height - 10;
