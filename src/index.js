@@ -17,6 +17,7 @@ import explosionSound from '../src/assets/sounds/explosion.wav';
 import beamSound from '../src/assets/sounds/beam.wav';
 import cluckSound from '../src/assets/sounds/cluck.wav';
 import doorSound from '../src/assets/sounds/door.wav';
+import backgroundSound from '../src/assets/sounds/background.wav';
 
 window.addEventListener("DOMContentLoaded", () => {
   const canvas = document.getElementById("myCanvas");
@@ -68,6 +69,10 @@ window.addEventListener("DOMContentLoaded", () => {
   const explodeSound = new Audio(explosionSound);
   const chickenCluckSound = new Audio(cluckSound);
   const doorCloseSound = new Audio(doorSound);
+  
+  const backgroundMusic = new Audio (backgroundSound);
+  backgroundMusic.volume = 0.75;
+  backgroundMusic.playbackRate = 1;
   
   document.addEventListener("keydown", keyDownHandler, false);
   document.addEventListener("keyup", keyUpHandler, false);
@@ -129,6 +134,8 @@ window.addEventListener("DOMContentLoaded", () => {
         score = 0;
         endDelay = false;
         gameStarted = true;
+        backgroundMusic.play();
+        backgroundMusic.loop = true;
         draw();
       // }
       // gameStarted = true;
@@ -374,6 +381,7 @@ window.addEventListener("DOMContentLoaded", () => {
         if (target.y <= FlyingSaucer.y + FlyingSaucer.height && target.y >= FlyingSaucer.y) {
           if (target.dropped) score++;
           target.powerUp ? doorCloseSound.play() : chickenCluckSound.play();
+          backgroundMusic.playbackRate += 0.01;
           score++;
           target.lifted = false;
           target.dropped = false;
@@ -409,6 +417,7 @@ window.addEventListener("DOMContentLoaded", () => {
     if (endDelay) {
       tractorBeamSound.loop = false;
       tractorBeamSound.pause();
+      backgroundMusic.pause();
       drawGameOver();
       drawScore();
       drawHealth(FlyingSaucer);
