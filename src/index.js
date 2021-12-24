@@ -16,7 +16,7 @@ import explosionImage from '../src/assets/images/explosion-lq.png';
 import explosionSound from '../src/assets/sounds/explosion.wav';
 import beamSound from '../src/assets/sounds/beam.wav';
 import cluckSound from '../src/assets/sounds/cluck.wav';
-
+import doorSound from '../src/assets/sounds/door.wav';
 
 window.addEventListener("DOMContentLoaded", () => {
   const canvas = document.getElementById("myCanvas");
@@ -67,6 +67,7 @@ window.addEventListener("DOMContentLoaded", () => {
   const tractorBeamSound = new Audio(beamSound);
   const explodeSound = new Audio(explosionSound);
   const chickenCluckSound = new Audio(cluckSound);
+  const doorCloseSound = new Audio(doorSound);
   
   document.addEventListener("keydown", keyDownHandler, false);
   document.addEventListener("keyup", keyUpHandler, false);
@@ -372,7 +373,7 @@ window.addEventListener("DOMContentLoaded", () => {
         target.lifted = true;
         if (target.y <= FlyingSaucer.y + FlyingSaucer.height && target.y >= FlyingSaucer.y) {
           if (target.dropped) score++;
-          chickenCluckSound.play();
+          target.powerUp ? doorCloseSound.play() : chickenCluckSound.play();
           score++;
           target.lifted = false;
           target.dropped = false;
