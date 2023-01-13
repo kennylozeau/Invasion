@@ -71,7 +71,7 @@ window.addEventListener("DOMContentLoaded", () => {
   const doorCloseSound = new Audio(doorSound);
   
   const backgroundMusic = new Audio (backgroundSound);
-  backgroundMusic.volume = 0.5;
+  backgroundMusic.volume = 0.35;
   backgroundMusic.playbackRate = 1;
   
   document.addEventListener("keydown", keyDownHandler, false);
