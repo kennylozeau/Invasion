@@ -134,7 +134,9 @@ window.addEventListener("DOMContentLoaded", () => {
         score = 0;
         endDelay = false;
         gameStarted = true;
+        backgroundMusic.load();
         backgroundMusic.play();
+        backgroundMusic.playbackRate = 1;
         backgroundMusic.loop = true;
         draw();
       // }
