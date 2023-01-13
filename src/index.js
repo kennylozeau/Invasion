@@ -66,12 +66,16 @@ window.addEventListener("DOMContentLoaded", () => {
   let explosionY;
 
   const tractorBeamSound = new Audio(beamSound);
+  tractorBeamSound.volume = 0.2;
   const explodeSound = new Audio(explosionSound);
+  explodeSound.volume = 0.35;
   const chickenCluckSound = new Audio(cluckSound);
+  chickenCluckSound.volume = 0.4;
   const doorCloseSound = new Audio(doorSound);
+  doorCloseSound.volume = 0.35;
   
   const backgroundMusic = new Audio (backgroundSound);
-  backgroundMusic.volume = 0.20;
+  backgroundMusic.volume = 0.15;
   backgroundMusic.playbackRate = 1;
   
   document.addEventListener("keydown", keyDownHandler, false);
