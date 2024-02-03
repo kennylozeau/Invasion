@@ -18,7 +18,7 @@ import beamSound from '../src/assets/sounds/beam.wav';
 import cluckSound from '../src/assets/sounds/cluck.wav';
 import doorSound from '../src/assets/sounds/door.wav';
 import backgroundSound from '../src/assets/sounds/background.wav';
-import throttle from "./assets/utils/throttle";
+import throttle from "./scripts/utils/throttle";
 
 window.addEventListener("DOMContentLoaded", () => {
   const canvas = document.getElementById("myCanvas");
