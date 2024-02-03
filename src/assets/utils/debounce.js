@@ -11,4 +11,4 @@ function debounce(fn, interval) {
     }
   }
   
-  export default debounce;
+export default debounce;

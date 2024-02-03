@@ -18,6 +18,7 @@ import beamSound from '../src/assets/sounds/beam.wav';
 import cluckSound from '../src/assets/sounds/cluck.wav';
 import doorSound from '../src/assets/sounds/door.wav';
 import backgroundSound from '../src/assets/sounds/background.wav';
+import throttle from "./assets/utils/throttle";
 
 window.addEventListener("DOMContentLoaded", () => {
   const canvas = document.getElementById("myCanvas");
@@ -112,9 +113,9 @@ window.addEventListener("DOMContentLoaded", () => {
   getHighScores();
 
   function toggleMute() {
+    console.log("TM")
     isMuted = !isMuted 
     
-    console.log("test")
     if (isMuted) {
       tractorBeamSound.volume = 0;
       explodeSound.volume = 0;
@@ -129,6 +130,8 @@ window.addEventListener("DOMContentLoaded", () => {
       backgroundMusic.volume = 0.15;
     }
   }
+
+  toggleMute = throttle(toggleMute, 500);
 
   function keyDownHandler(e) {
     if (e.key == "Right" || e.key == "ArrowRight" || e.key == "d" || e.key == "D") {
