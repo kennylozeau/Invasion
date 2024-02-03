@@ -42,7 +42,7 @@ window.addEventListener("DOMContentLoaded", () => {
   let gameOver = false;
   let gameStarted = false;
   let endDelay = false;
-  let isMuted = false;
+  let isMuted = true; // unmuted during initialization
 
   let rightPressed = false;
   let leftPressed = false;
@@ -69,16 +69,16 @@ window.addEventListener("DOMContentLoaded", () => {
   let explosionY;
 
   const tractorBeamSound = new Audio(beamSound);
-  tractorBeamSound.volume = 0.2;
+  // tractorBeamSound.volume = 0.2;
   const explodeSound = new Audio(explosionSound);
-  explodeSound.volume = 0.35;
+  // explodeSound.volume = 0.35;
   const chickenCluckSound = new Audio(cluckSound);
-  chickenCluckSound.volume = 0.4;
+  // chickenCluckSound.volume = 0.4;
   const doorCloseSound = new Audio(doorSound);
-  doorCloseSound.volume = 0.35;
+  // doorCloseSound.volume = 0.35;
   
   const backgroundMusic = new Audio (backgroundSound);
-  backgroundMusic.volume = 0.15;
+  // backgroundMusic.volume = 0.15;
   backgroundMusic.playbackRate = 1;
   
   document.addEventListener("keydown", keyDownHandler, false);
@@ -113,7 +113,6 @@ window.addEventListener("DOMContentLoaded", () => {
   getHighScores();
 
   function toggleMute() {
-    console.log("TM")
     isMuted = !isMuted 
     
     if (isMuted) {
@@ -132,6 +131,7 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
   toggleMute = throttle(toggleMute, 500);
+  toggleMute()
 
   function keyDownHandler(e) {
     if (e.key == "Right" || e.key == "ArrowRight" || e.key == "d" || e.key == "D") {
