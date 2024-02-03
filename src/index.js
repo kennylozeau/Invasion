@@ -41,6 +41,7 @@ window.addEventListener("DOMContentLoaded", () => {
   let gameOver = false;
   let gameStarted = false;
   let endDelay = false;
+  let isMuted = false;
 
   let rightPressed = false;
   let leftPressed = false;
@@ -51,6 +52,7 @@ window.addEventListener("DOMContentLoaded", () => {
   let tildePressed = false;
   let onePressed = false;
   let xPressed = false;
+  let mPressed = false;
 
   let targets = {
     target1: new Target,
@@ -109,17 +111,36 @@ window.addEventListener("DOMContentLoaded", () => {
 
   getHighScores();
 
+  function toggleMute() {
+    isMuted = !isMuted 
+    
+    console.log("test")
+    if (isMuted) {
+      tractorBeamSound.volume = 0;
+      explodeSound.volume = 0;
+      chickenCluckSound.volume = 0;
+      doorCloseSound.volume = 0;
+      backgroundMusic.volume = 0;
+    } else {
+      tractorBeamSound.volume = 0.2;
+      explodeSound.volume = 0.35;
+      chickenCluckSound.volume = 0.4;
+      doorCloseSound.volume = 0.35;
+      backgroundMusic.volume = 0.15;
+    }
+  }
+
   function keyDownHandler(e) {
-    if (e.key == "Right" || e.key == "ArrowRight" || e.key == "d") {
+    if (e.key == "Right" || e.key == "ArrowRight" || e.key == "d" || e.key == "D") {
       rightPressed = true;
     }
-    else if (e.key == "Left" || e.key == "ArrowLeft" || e.key == "a") {
+    else if (e.key == "Left" || e.key == "ArrowLeft" || e.key == "a" || e.key == "A") {
       leftPressed = true;
     }
-    else if (e.key == "Down" || e.key == "ArrowDown" || e.key == "s") {
+    else if (e.key == "Down" || e.key == "ArrowDown" || e.key == "s" || e.key == "S") {
       downPressed = true;
     }
-    else if (e.key == "Up" || e.key == "ArrowUp" || e.key == "w") {
+    else if (e.key == "Up" || e.key == "ArrowUp" || e.key == "w" || e.key == "W") {
       upPressed = true;
     }
     else if (e.key == "Spacebar" || e.key == " ") {
@@ -133,6 +154,8 @@ window.addEventListener("DOMContentLoaded", () => {
       onePressed = true;
     } else if (e.key == "x" || e.key == "X") {
       xPressed = true;
+    } else if (e.key == "m" || e.key == "M") {
+      mPressed = true;
     } else if (e.key == "r" && !gameStarted) {
       // if (!gameStarted && !gameOver) {
         score = 0;
@@ -149,16 +172,16 @@ window.addEventListener("DOMContentLoaded", () => {
   }
   
   function keyUpHandler(e) {
-    if (e.key == "Right" || e.key == "ArrowRight" || e.key == "d") {
+    if (e.key == "Right" || e.key == "ArrowRight" || e.key == "d" || e.key == "D") {
       rightPressed = false;
     }
-    else if (e.key == "Left" || e.key == "ArrowLeft" || e.key == "a") {
+    else if (e.key == "Left" || e.key == "ArrowLeft" || e.key == "a" || e.key == "A") {
       leftPressed = false;
     }
-    else if (e.key == "Down" || e.key == "ArrowDown" || e.key == "s") {
+    else if (e.key == "Down" || e.key == "ArrowDown" || e.key == "s" || e.key == "S") {
       downPressed = false;
     }
-    else if (e.key == "Up" || e.key == "ArrowUp" || e.key == "w") {
+    else if (e.key == "Up" || e.key == "ArrowUp" || e.key == "w" || e.key == "W") {
       upPressed = false;
     }
     else if (e.key == "Spacebar" || e.key == " ") {
@@ -172,6 +195,8 @@ window.addEventListener("DOMContentLoaded", () => {
       onePressed = false;
     } else if (e.key == "x" || e.key == "X") {
       xPressed = false;
+    } else if (e.key == "m" || e.key == "M") {
+      mPressed = false;
     }
   }
 
@@ -420,6 +445,8 @@ window.addEventListener("DOMContentLoaded", () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     if (tildePressed && onePressed) eeEnabled = true;
 
+    if (mPressed) toggleMute();
+
     if (endDelay) {
       tractorBeamSound.loop = false;
       tractorBeamSound.pause();
@@ -602,6 +629,7 @@ window.addEventListener("DOMContentLoaded", () => {
       }
     }
     requestAnimationFrame(draw);
+    // setTimeout(() => requestAnimationFrame(draw), 1000 / 1);
   }
 
 });
