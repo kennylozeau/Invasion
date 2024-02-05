@@ -1,116 +1,78 @@
 import "./styles/index.css";
 // import { keyDownHandler, keyUpHandler } from './scripts/key_events';
-import firebase from 'firebase/app';
-import 'firebase/firestore';
 import Saucer from './scripts/flying_saucer';
 import Target from './scripts/target';
 import Missile from './scripts/missile';
+import splashImage from './assets/images/splash.png';
 
-import missileImage from '../src/assets/images/missile.png';
-import splashImage from '../src/assets/images/splash.png';
-import saucerImage from '../src/assets/images/saucer.png';
-import eeImage from '../src/assets/images/ee.png';
-import targetImage from '../src/assets/images/chicken.png';
-import powerUpImage from '../src/assets/images/crate.png';
-import explosionImage from '../src/assets/images/explosion-lq.png';
-import explosionSound from '../src/assets/sounds/explosion.wav';
-import beamSound from '../src/assets/sounds/beam.wav';
-import cluckSound from '../src/assets/sounds/cluck.wav';
-import doorSound from '../src/assets/sounds/door.wav';
-import backgroundSound from '../src/assets/sounds/background.wav';
+import { 
+  drawSaucer,
+  drawBeam,
+  drawScore,
+  drawPowerUps,
+  drawHealth,
+  drawGameOver,
+  drawNewHighScore,
+  drawPullUp,
+  drawShield,
+  drawExplosion,
+  drawMissile,
+} from "./scripts/utils/drawFunctions";
+
 import throttle from "./scripts/utils/throttle";
+import drawTargets from "./scripts/utils/drawTargets";
+import initializeSounds from "./scripts/utils/initializeSounds";
+import initializeVariables from "./scripts/utils/initializeVariables";
+import initializeDB from "./scripts/utils/initializeDB";
+import getHighScores from "./scripts/utils/getHighScores";
 
 window.addEventListener("DOMContentLoaded", () => {
   const canvas = document.getElementById("myCanvas");
   const ctx = canvas.getContext("2d");
+  const db = initializeDB();
+
+  let {
+    highScores,
+    eeEnabled,
+    score,
+    shieldTimeout,
+    gameOver,
+    gameStarted,
+    endDelay,
+    isMuted,
+    rightPressed,
+    leftPressed,
+    downPressed,
+    upPressed,
+    spacePressed,
+    shiftPressed,
+    tildePressed,
+    onePressed,
+    xPressed,
+    mPressed,
+    targets,
+    FlyingSaucer,
+    missiles,
+    explosionOn,
+    explosionFrame,
+    explosionX,
+    explosionY
+  } = initializeVariables();
+
+  const {
+    tractorBeamSound,
+    explodeSound,
+    chickenCluckSound,
+    doorCloseSound,
+    backgroundMusic
+  } = initializeSounds();
 
   drawSplash();
-
-  firebase.initializeApp({
-    apiKey: 'AIzaSyBoLEjbvc3K2e2m3EA378jmuaJ9fGhc15g',
-    authDomain: "invasion-3f8d9.firebaseapp.com",
-    projectId: 'invasion-3f8d9'
-  });
-
-  const db = firebase.firestore();
-
-  let highScores = [];
-  let eeEnabled = false;
-
-  let score = 0;
-  let shieldTimeout;
-  let gameOver = false;
-  let gameStarted = false;
-  let endDelay = false;
-  let isMuted = true; // unmuted during initialization
-
-  let rightPressed = false;
-  let leftPressed = false;
-  let downPressed = false;
-  let upPressed = false;
-  let spacePressed = false;
-  let shiftPressed = false;
-  let tildePressed = false;
-  let onePressed = false;
-  let xPressed = false;
-  let mPressed = false;
-
-  let targets = {
-    target1: new Target,
-    target2: new Target,
-    target3: new Target
-  }
-
-  let FlyingSaucer = new Saucer;
-  let missiles = { missile: new Missile(FlyingSaucer, score) };
-  let explosionOn = false;
-  let explosionFrame = 0;
-  let explosionX;
-  let explosionY;
-
-  const tractorBeamSound = new Audio(beamSound);
-  // tractorBeamSound.volume = 0.2;
-  const explodeSound = new Audio(explosionSound);
-  // explodeSound.volume = 0.35;
-  const chickenCluckSound = new Audio(cluckSound);
-  // chickenCluckSound.volume = 0.4;
-  const doorCloseSound = new Audio(doorSound);
-  // doorCloseSound.volume = 0.35;
-  
-  const backgroundMusic = new Audio (backgroundSound);
-  // backgroundMusic.volume = 0.15;
-  backgroundMusic.playbackRate = 1;
   
   document.addEventListener("keydown", keyDownHandler, false);
   document.addEventListener("keyup", keyUpHandler, false);
 
-  function getHighScores() {
-    highScores = [];
-    
-    db.collection("high_scores")
-      .orderBy("score", "desc")
-      .limit(10)
-      .get()
-      .then((querySnapshot) => {
-        let highScoresList = document.getElementById("high-scores")
-        
-        if (highScoresList.childElementCount > 0) {
-          for (let i = highScoresList.childNodes.length - 1; i >= 0; i--) {
-            let child = highScoresList.childNodes[i];
-            highScoresList.removeChild(child);
-          }
-        }
-
-        querySnapshot.forEach((doc) => {
-          highScores.push([doc.data().name, doc.data().score]);
-          let scoreLi = document.createElement("li");
-          scoreLi.innerHTML = `${doc.data().name}  -  ${doc.data().score}`;
-          highScoresList.appendChild(scoreLi);
-        });
-      });
-  }
-
-  getHighScores();
+  highScores = getHighScores(db, highScores);
 
   function toggleMute() {
     isMuted = !isMuted 
@@ -160,17 +122,14 @@ window.addEventListener("DOMContentLoaded", () => {
     } else if (e.key == "m" || e.key == "M") {
       mPressed = true;
     } else if (e.key == "r" && !gameStarted) {
-      // if (!gameStarted && !gameOver) {
-        score = 0;
-        endDelay = false;
-        gameStarted = true;
-        backgroundMusic.load();
-        backgroundMusic.play();
-        backgroundMusic.playbackRate = 1;
-        backgroundMusic.loop = true;
-        draw();
-      // }
-      // gameStarted = true;
+      score = 0;
+      endDelay = false;
+      gameStarted = true;
+      backgroundMusic.load();
+      backgroundMusic.play();
+      backgroundMusic.playbackRate = 1;
+      backgroundMusic.loop = true;
+      draw();
     }
   }
   
@@ -201,155 +160,6 @@ window.addEventListener("DOMContentLoaded", () => {
     } else if (e.key == "m" || e.key == "M") {
       mPressed = false;
     }
-  }
-
-  function drawSaucer(FlyingSaucer) {
-    let saucerImg = new Image;
-    saucerImg.src = saucerImage;
-    ctx.beginPath();
-    ctx.drawImage(saucerImg, FlyingSaucer.x, FlyingSaucer.y);
-    ctx.closePath();
-  }
-
-  function drawTarget(targets) {
-    Object.values(targets).forEach( target => {
-      if (eeEnabled) {
-        let targetImg = new Image;
-        targetImg.src = eeImage;
-        ctx.beginPath();
-        ctx.drawImage(targetImg, target.x, target.y - 30);
-        ctx.closePath();
-      } else if (target.powerUp) {
-        let targetImg = new Image;
-        targetImg.src = powerUpImage;
-        ctx.beginPath();
-        ctx.drawImage(targetImg, target.x, target.y - 10);
-        ctx.closePath();
-      } else {
-        let targetImg = new Image;
-        targetImg.src = targetImage;
-        ctx.beginPath();
-        ctx.drawImage(targetImg, target.x, target.y - 10);
-        ctx.closePath();
-      }
-    })
-  }
-
-  function drawBeam(FlyingSaucer) {
-    ctx.beginPath();
-    ctx.rect(FlyingSaucer.x + (FlyingSaucer.width / 2) - 10, FlyingSaucer.y + FlyingSaucer.height, 20, canvas.height - FlyingSaucer.y);
-    ctx.fillStyle = "rgba(240, 255, 0, 0.4)";
-    ctx.fill();
-    ctx.closePath();  
-  }
-
-  function drawScore() {
-    ctx.beginPath();
-    ctx.font = "30px VT323";
-    ctx.fillStyle = "rgba(0, 0, 0, 1)"
-    ctx.fillText(`Score: ${score}`, 800, 40);
-    ctx.closePath();
-  }
-
-  function drawPowerUps() {
-    ctx.beginPath();
-    ctx.font = "30px VT323";
-    ctx.fillStyle = "rgba(0, 0, 0, 1)"
-    ctx.fillText(`Shields: ${FlyingSaucer.powerUps}`, 800, 120);
-    ctx.closePath();
-  }
-
-  function drawHealth(FlyingSaucer) {
-    ctx.beginPath();
-    ctx.font = "30px VT323";
-    ctx.fillStyle = "rgba(0, 0, 0, 1)"
-    ctx.fillText(`Health: ${FlyingSaucer.health}`, 800, 80);
-    ctx.closePath();
-  }
-
-  function drawGameOver() {
-    ctx.beginPath();
-    ctx.font = "100px VT323";
-    ctx.fillStyle = "#FF0000"
-    ctx.fillText("GAME OVER", 300, 300);
-    ctx.closePath();
-  }
-
-  function drawPullUp() {
-    ctx.beginPath();
-    ctx.font = "80px VT323";
-    ctx.fillStyle = "#FF0000"
-    ctx.fillText("PULL UP", 305, 200);
-    ctx.closePath();
-  }
-
-  function drawNewHighScore() {
-    ctx.beginPath();
-    ctx.font = "50px VT323";
-    ctx.fillStyle = "#FF0000"
-    ctx.fillText("NEW HIGH SCORE!", 335, 200);
-    ctx.closePath();
-  }
-
-  function drawShield() {
-    ctx.beginPath();
-    ctx.arc(FlyingSaucer.x + (FlyingSaucer.width / 2),
-            FlyingSaucer.y + (FlyingSaucer.height / 2),
-            (FlyingSaucer.width / 2) + 5,
-            0,
-            2 * Math.PI);
-    ctx.lineWidth = 3;
-    ctx.strokeStyle = "#FF0000";
-    ctx.stroke();
-    ctx.closePath();
-  }
-
-  function drawExplosion() {    
-    let spriteX;
-    let spriteY;
-
-    let explosionImg = new Image;
-    explosionImg.src = explosionImage;
-
-    if (explosionFrame < 4) {
-      spriteX = 64 * explosionFrame;
-      spriteY = 0;
-    } else if (explosionFrame >= 4 && explosionFrame < 8) {
-      spriteX = 64 * (explosionFrame % 4);
-      spriteY = 64;
-    } else if (explosionFrame >= 8 && explosionFrame < 12) {
-      spriteX = 64 * (explosionFrame % 4);
-      spriteY = 128;
-    } else if (explosionFrame >= 12 && explosionFrame < 16) {
-      spriteX = 64 * (explosionFrame % 4);
-      spriteY = 192;
-    }
-
-    ctx.drawImage(explosionImg, spriteX, spriteY, 64, 64, explosionX - 32, explosionY - 32, 64, 64);
-
-    explosionFrame++
-    if (explosionFrame > 15) {
-      explosionOn = false;
-      explosionFrame = 0;
-    }
-  }
-
-  function drawMissile({missile}) {
-    let missileImg = new Image;
-    missileImg.src = missileImage;
-
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
-    let translateX = missile.x + (missile.width / 2);
-    let translateY = missile.y + (missile.height / 2);
-
-    ctx.translate(translateX, translateY);
-    ctx.rotate(missile.canvasRotate);
-    ctx.translate(-translateX, -translateY);
-
-    ctx.beginPath();
-    ctx.drawImage(missileImg, missile.x, missile.y);
-    ctx.closePath();
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
   }
 
   function drawSplash() {
@@ -454,13 +264,12 @@ window.addEventListener("DOMContentLoaded", () => {
       tractorBeamSound.loop = false;
       tractorBeamSound.pause();
       backgroundMusic.pause();
-      drawGameOver();
-      drawScore();
-      drawHealth(FlyingSaucer);
+      drawGameOver(ctx);
+      drawScore(score, ctx);
+      drawHealth(FlyingSaucer, ctx);
       
-      // if (score > 0 && !eeEnabled) {
       if (score > highScores[9][1] && !eeEnabled) {
-        drawNewHighScore();
+        drawNewHighScore(ctx);
 
         let highScoreForm = document.createElement("form");
         let highScoreModal = document.createElement("div");
@@ -481,7 +290,7 @@ window.addEventListener("DOMContentLoaded", () => {
             score
           })
           .then(() => {
-            getHighScores();
+            highScores = getHighScores(db, highScores);
             gameOver = false;
             gameStarted = false;
           })
@@ -512,7 +321,7 @@ window.addEventListener("DOMContentLoaded", () => {
       return true;
     }
 
-    drawSaucer(FlyingSaucer);
+    drawSaucer(FlyingSaucer, ctx);
 
     if (xPressed && FlyingSaucer.powerUps > 0 && !FlyingSaucer.shieldOn) {
       FlyingSaucer.shieldOn = true;
@@ -521,12 +330,12 @@ window.addEventListener("DOMContentLoaded", () => {
       }, 8000);
       FlyingSaucer.powerUps -= 1;
     }
-    if (FlyingSaucer.shieldOn) drawShield();
+    if (FlyingSaucer.shieldOn) drawShield(FlyingSaucer, ctx);
 
-    if (explosionOn) drawExplosion();
+    if (explosionOn) [explosionOn, explosionFrame] = drawExplosion(explosionOn, explosionFrame, explosionX, explosionY, ctx);
 
     if (FlyingSaucer.y + FlyingSaucer.height === canvas.height) {
-      drawPullUp();
+      drawPullUp(ctx);
       FlyingSaucer.health -= 1;
     }
 
@@ -537,11 +346,11 @@ window.addEventListener("DOMContentLoaded", () => {
       setTimeout(() => { delete targets.target4 }, 10000);
     }
 
-    drawTarget(targets);
-    drawScore();
-    drawPowerUps();
-    drawHealth(FlyingSaucer);
-    drawMissile(missiles);
+    drawTargets(targets, ctx, eeEnabled);
+    drawScore(score, ctx);
+    drawPowerUps(FlyingSaucer, ctx);
+    drawHealth(FlyingSaucer, ctx);
+    drawMissile(missiles.missile, ctx);
 
     missiles.missile.y += missiles.missile.dy;
     missiles.missile.x += missiles.missile.dx;
@@ -558,13 +367,10 @@ window.addEventListener("DOMContentLoaded", () => {
       FlyingSaucer.health = 0;
       endDelay = true;
       gameOver = true;
-      // gameStarted = false;
     }
 
-    // let tractorBeamSound = new Audio(beamSound);
-
     if (spacePressed) {
-      drawBeam(FlyingSaucer);
+      drawBeam(FlyingSaucer, ctx, canvas);
       checkBeamUp(targets, FlyingSaucer);
     
       if (tractorBeamSound.paused) {
@@ -632,7 +438,6 @@ window.addEventListener("DOMContentLoaded", () => {
       }
     }
     requestAnimationFrame(draw);
-    // setTimeout(() => requestAnimationFrame(draw), 1000 / 1);
   }
 
 });
